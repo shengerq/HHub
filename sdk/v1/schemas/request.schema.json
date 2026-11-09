@@ -1,0 +1,61 @@
+{
+  "type": [
+    "object",
+    "null"
+  ],
+  "properties": {
+    "type": {
+      "type": "string"
+    },
+    "requestId": {
+      "type": "string"
+    },
+    "protocol": {
+      "type": "string"
+    },
+    "pluginId": {
+      "type": "string"
+    },
+    "capabilityId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null
+    },
+    "value": {
+      "default": null
+    },
+    "expectedRevision": {
+      "type": [
+        "string",
+        "integer",
+        "null"
+      ],
+      "pattern": "^-?(?:0|[1-9]\\d*)$",
+      "default": null
+    },
+    "targetId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null
+    },
+    "values": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "type",
+    "requestId",
+    "protocol",
+    "pluginId"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

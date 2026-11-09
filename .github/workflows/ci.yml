@@ -1,0 +1,33 @@
+name: Host and SDK checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Build, protocol and lifecycle checks
+        shell: pwsh
+        run: ./tools/Test-Repository.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: development-sdk-not-certified
+          path: artifacts/sdk/*.nupkg
+  preview:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Publish empty development host
+        shell: pwsh
+        run: ./tools/Build-UnifiedPreview.ps1 -DotnetPath (Get-Command dotnet).Source
+      - uses: actions/upload-artifact@v4
+        with:
+          name: empty-host-development-preview-not-certified
+          path: artifacts/unified-v1/host/

@@ -1,0 +1,817 @@
+[
+  {
+    "source": "Hhub/src/Hhub.App/app.manifest",
+    "destination": "HHub/src/Hhub.App/app.manifest",
+    "sha256": "eb40ae021fb15f90281d814fca5c4d3bef7f469f121f42bf064628c4e65bdb17"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/App.xaml",
+    "destination": "HHub/src/Hhub.App/App.xaml",
+    "sha256": "6418374458750428fd83f957da8deae86b08793ee6d2903ce3844c04b15f3639"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/App.xaml.cs",
+    "destination": "HHub/src/Hhub.App/App.xaml.cs",
+    "sha256": "e766cb901625b07ec5bc14defaad11d31c2b17048a07316bb42154977975e844"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/Assets/Hhub.ico",
+    "destination": "HHub/src/Hhub.App/Assets/Hhub.ico",
+    "sha256": "656da8768138b7ca43af2581a9d28ee4be1d02538ca78e9169fd3113547a24b7"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/Assets/Hhub.png",
+    "destination": "HHub/src/Hhub.App/Assets/Hhub.png",
+    "sha256": "ddcf435858c71722925dc37bab4af256e9a5fe5ccb916995bee2b4a37c6b57f1"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/AudioDeviceInventory.cs",
+    "destination": "HHub/src/Hhub.App/AudioDeviceInventory.cs",
+    "sha256": "2b0e638622b15193494c99c366e12c3c593a3ab69a4ec3b8e17074c12a05a71c"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/AudioJackTopology.cs",
+    "destination": "HHub/src/Hhub.App/AudioJackTopology.cs",
+    "sha256": "5eed86b84d7a9cea4e58c5cb4e15eb7f716e5814a1061f3d68b030cebda51900"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/Hhub.App.csproj",
+    "destination": "HHub/src/Hhub.App/Hhub.App.csproj",
+    "sha256": "fb4d1165d7b6a6d41dd60650ed77b9ed40c5762415dbe9001f36bb409f1d72bc"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/licenses/NAudio-LICENSE.txt",
+    "destination": "HHub/src/Hhub.App/licenses/NAudio-LICENSE.txt",
+    "sha256": "303e01786b271eb464b3f43d18a375f2f17d37bc708a37c2fdf45b289fb5bfaa"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.Actions.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.Actions.cs",
+    "sha256": "083aea35b7fb4a52bb38b721e70b8592255ec046cca4d9f22f1cdb88ac78b2e4"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.Activation.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.Activation.cs",
+    "sha256": "93fa55592374354d8f86d860bdad84a2621223c73a074aea040df11a01434aa1"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.Appearance.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.Appearance.cs",
+    "sha256": "c9c87f16e59920fd000b507586a2bacb95f47ef93ceeecde4afb85c81eec0b9e"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.AppearanceFlow.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.AppearanceFlow.cs",
+    "sha256": "7435112fd288f6f3242b923d1043b51544d214f74df98a948c43a1ff5dc56f7f"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.AppUpdates.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.AppUpdates.cs",
+    "sha256": "65052d92ae305b651f49a11b59b67f35f924476e220850b0e4e86a3685890513"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.CommandForm.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.CommandForm.cs",
+    "sha256": "57d39a772b63860168313df42becfa579835100d0f629aa961f923303e88cf72"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.cs",
+    "sha256": "60570f4d6fee434a0c8c426262b2f99d159d064e7244d7b93c1ef9881c19e51e"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.Devices.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.Devices.cs",
+    "sha256": "5b6c66426babdbb7b2a6dd65086f97b58043592d513c017f20df32373cc6fd68"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.DeviceWatcher.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.DeviceWatcher.cs",
+    "sha256": "8866a6bea33ab4e91bcbc87d9f9e8c492451bb628dc7e7fc4f6daf5109f50cd1"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.Diagnostics.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.Diagnostics.cs",
+    "sha256": "4271f4d50cde789d26902a2188ae448d02399181803dc50627dd82a1ac0b08c0"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.FirstFrame.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.FirstFrame.cs",
+    "sha256": "00cefbe2506b72a43e0987fc86e0a6b7a7d6adc1c8e38d01c86f755f260a5029"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.Home.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.Home.cs",
+    "sha256": "76f30129453a726cff70c56f7b167a6f1f63e632ef65a1f503e56b6283bf449e"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.Monitoring.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.Monitoring.cs",
+    "sha256": "47cb1e68c7eba63837a8bed0b4d4db27ed3236b4885fcbd874f6e91077558016"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.Motion.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.Motion.cs",
+    "sha256": "078fc241695ea27fec7e9dacac4bc307701d3e1bbe6151b85b0e043997404743"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.PluginComposition.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.PluginComposition.cs",
+    "sha256": "abd76081e473f640dc9822a5ccc1a55bc84876f0dc9a9f562ed42609af63d6e1"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.PluginDrop.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.PluginDrop.cs",
+    "sha256": "43a791946bfc5356d52b0fd2c7ec234df0c968f5019a8c0857c0bf7772e4b8f7"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.PluginMarket.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.PluginMarket.cs",
+    "sha256": "a86560a1736756b8970fe2ec7e92831895413282ae69b13cf97506b579b310c8"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.PluginNavigation.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.PluginNavigation.cs",
+    "sha256": "587b88a2c9d87a917cc50d6eb8336223be1e0ec138df9bc224147493a76cbf23"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.Plugins.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.Plugins.cs",
+    "sha256": "fa158ee512501d5dcfff96c07ccdc98917a6668c3f4986481070a6c576e70139"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.PluginUi.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.PluginUi.cs",
+    "sha256": "7b0675c59c961798a2e3f1e8ef80ff694f5fb5cc15649dae781a55137b83e166"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.RemoteHost.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.RemoteHost.cs",
+    "sha256": "535bb53e280d82f4ae9b0cbb67202240e98b1057a30311dbd49101fc8e47a55b"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.SceneCreation.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.SceneCreation.cs",
+    "sha256": "ed458f52e4656f5573b858a035e2e28f2aa4f867c19120a48f668aca138e0ccf"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.SceneDetail.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.SceneDetail.cs",
+    "sha256": "2d347cf6e7dec5d7f216d74dcaa899de5a3cc882fbfc3a56d8b50ee8a0fb502f"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.SceneEditor.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.SceneEditor.cs",
+    "sha256": "3a07a2c0d4e5a08932f6b11b61f59f23e249f0c33657c975becf8513d65a76d8"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.ScenePreview.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.ScenePreview.cs",
+    "sha256": "bc6e80fdc162f9126932d5b1e9f800f8b2707c1ad321e1745f5465eee24f4058"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.Scenes.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.Scenes.cs",
+    "sha256": "b6bac294fa78aa963c8a27bf54ea657e3060e15223162eed439fb39d8583b19d"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.SceneSelection.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.SceneSelection.cs",
+    "sha256": "4e8aaa662a00d0e6fbb20e5751c1a9ccad62b6693e04e8158172a4464970d966"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.Settings.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.Settings.cs",
+    "sha256": "0dd6da8a6453b03c6b4f490a5a76dac398db888e21894bb1b0527f3b43c726b1"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.Settings.Info.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.Settings.Info.cs",
+    "sha256": "59d6e6ebb9347a1e174b2b33679e60c229cd5fcac9c3fe75090be75034917f21"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.SidebarDividers.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.SidebarDividers.cs",
+    "sha256": "cad193f9b998e279f95fb9458733d0927c7ea426bebdbbd52ee15625580ce977"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/MainWindow.Tray.cs",
+    "destination": "HHub/src/Hhub.App/MainWindow.Tray.cs",
+    "sha256": "b339d8f9ed3eb1ee651787b7b17fd782aeeee5b19b9d40678754d5889fafeed0"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/NativeTray.cs",
+    "destination": "HHub/src/Hhub.App/NativeTray.cs",
+    "sha256": "4d9302d58e8e36daa3f91effa1bc37b6108a15788d952d2ea5ace3b5a803300f"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/NativeTrayTooltip.cs",
+    "destination": "HHub/src/Hhub.App/NativeTrayTooltip.cs",
+    "sha256": "cd695b9301bd6e0505424b735a02a036000068c1bd260e2b47d6d80d31c38b14"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/NativeWindowActivation.cs",
+    "destination": "HHub/src/Hhub.App/NativeWindowActivation.cs",
+    "sha256": "d3ceba2d7cf0919959234888234e2f4d111da70a1198134e205aa317cac2e844"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/PlatformServices.cs",
+    "destination": "HHub/src/Hhub.App/PlatformServices.cs",
+    "sha256": "940dc94966eab42f426deb03a488af89455c3525890f5a54aba74c12b067802a"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/Program.cs",
+    "destination": "HHub/src/Hhub.App/Program.cs",
+    "sha256": "800752a2a3207b1e7d4159551f397a86b4f8fe67fad104356c05cc25afa108b2"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/ShellLayout.cs",
+    "destination": "HHub/src/Hhub.App/ShellLayout.cs",
+    "sha256": "2a8b3ade38ca33368c71e54fce2f14d0861c86ca2e482ae511861581432cebb7"
+  },
+  {
+    "source": "Hhub/src/Hhub.App/UnifiedWindow.cs",
+    "destination": "HHub/src/Hhub.App/UnifiedWindow.cs",
+    "sha256": "752fc0db14421cfaf9696990eeebc354747bcc576d7934188ad06223436a6abd"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/DeviceInventory.cs",
+    "destination": "HHub/src/Hhub.Core/DeviceInventory.cs",
+    "sha256": "b32ab51c3225e604bf4ef2a2242340465e59690016015a5b7218865301c013a5"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/DeviceMetadata.cs",
+    "destination": "HHub/src/Hhub.Core/DeviceMetadata.cs",
+    "sha256": "685135ffac1e4a0ea55a3064c20cdb06caf2eb3c9e58cb737f467e5b982bf65d"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/DeviceUpdatePolicy.cs",
+    "destination": "HHub/src/Hhub.Core/DeviceUpdatePolicy.cs",
+    "sha256": "fd5a1185962025a23e21941630abc1f1dead1e89ae34deb5c1355b938fbae7ec"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/DiagnosticJournal.cs",
+    "destination": "HHub/src/Hhub.Core/DiagnosticJournal.cs",
+    "sha256": "5ac2135ecfb585597c75f9909a9a775809d8207e42e79ed17ad578345b24ea51"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/GamingPeripheralPolicy.cs",
+    "destination": "HHub/src/Hhub.Core/GamingPeripheralPolicy.cs",
+    "sha256": "bd13cff8980a004cb30a020b65652c0920324b69761ec784f1048b44915925f3"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/HardwareDisplayName.cs",
+    "destination": "HHub/src/Hhub.Core/HardwareDisplayName.cs",
+    "sha256": "0d3549d095b2fb9e2a0392f10aa9229f9023988e6dcc3bc9fa161d741d342eec"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/Hhub.Core.csproj",
+    "destination": "HHub/src/Hhub.Core/Hhub.Core.csproj",
+    "sha256": "ed7c0f20902846adddafbfc178137e3a0dd399bba0a8c656195f76855d2233bb"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/InstanceLease.cs",
+    "destination": "HHub/src/Hhub.Core/InstanceLease.cs",
+    "sha256": "41d127f709b15a4d84d42e38b3f3fd0733b2a5b92f8990d334f91fefe12b35f8"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/ManagedPluginEntry.cs",
+    "destination": "HHub/src/Hhub.Core/ManagedPluginEntry.cs",
+    "sha256": "1ef4665ee894f33ed12228181041749d21583a05179c391a7b0eae553cca1554"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/MetricFormatter.cs",
+    "destination": "HHub/src/Hhub.Core/MetricFormatter.cs",
+    "sha256": "0305480864a337b3494bfd3066c45039b974d0d092f4a5fd872aeb1b94f98dd7"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/Models.cs",
+    "destination": "HHub/src/Hhub.Core/Models.cs",
+    "sha256": "5e93b7e21f431a546e01bd57db33d9aaf9f4caf8099b8b229f262299538fc429"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/MonitoringData.cs",
+    "destination": "HHub/src/Hhub.Core/MonitoringData.cs",
+    "sha256": "a4c4bdb65fa399d3708889af81e10b8e9613aa148f41fa32c8c813133506699d"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/PluginBatch.cs",
+    "destination": "HHub/src/Hhub.Core/PluginBatch.cs",
+    "sha256": "d90685e4b7f48c659e79621c7a3726e0dd7c25dc9f4da34502664457b38c10b1"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/PluginCatalog.cs",
+    "destination": "HHub/src/Hhub.Core/PluginCatalog.cs",
+    "sha256": "277d5e258d43ff403def388dcb783e5fd3ad70cd0e9f9e89a0da8b6a031b34fe"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/PluginCompatibility.cs",
+    "destination": "HHub/src/Hhub.Core/PluginCompatibility.cs",
+    "sha256": "886f3d03333e5d6822120e1d324b65a434adb4058a1422859deb7befe8714975"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/PluginComposition.cs",
+    "destination": "HHub/src/Hhub.Core/PluginComposition.cs",
+    "sha256": "67b3944b4f52cb3f6795af9879fca4cce37e24ee2517b972ceb27ada671984c1"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/PluginDiagnostics.cs",
+    "destination": "HHub/src/Hhub.Core/PluginDiagnostics.cs",
+    "sha256": "3050532bf8a49635844b1e8f2802f45508e54bf455cefc09f9d3ab2abea3101d"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/PluginDisclosures.cs",
+    "destination": "HHub/src/Hhub.Core/PluginDisclosures.cs",
+    "sha256": "293c75ad409b7075a30474e2e2008a9d861b16af336097077b9d113537527231"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/PluginMarket.cs",
+    "destination": "HHub/src/Hhub.Core/PluginMarket.cs",
+    "sha256": "c4ed44f18071dbcfc162099de757327a22d86123f85166a3bb61ff829423b191"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/PluginMarkets.cs",
+    "destination": "HHub/src/Hhub.Core/PluginMarkets.cs",
+    "sha256": "c663b4e45703ccb88497b699d0b6b23c26a805c5f0f30b03779986f3b972bf92"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/PluginPageData.cs",
+    "destination": "HHub/src/Hhub.Core/PluginPageData.cs",
+    "sha256": "029ce610151fdd63b5ee8924ca8f11a96d27cf8630dab44516f5b7a52151d233"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/PluginPipeReader.cs",
+    "destination": "HHub/src/Hhub.Core/PluginPipeReader.cs",
+    "sha256": "759093a9323e025d9b6a5507c86a37e80d53add57665daf2879f269a1b127186"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/PluginPolicies.cs",
+    "destination": "HHub/src/Hhub.Core/PluginPolicies.cs",
+    "sha256": "ab2715b0c91a51eda52399cde8b222115f5485bf993340404c9247a1e66c8462"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/PluginRuntime.cs",
+    "destination": "HHub/src/Hhub.Core/PluginRuntime.cs",
+    "sha256": "d7c165ab6cc490d0b008abcf1e6195173fceee84310959c8f48b17878a315316"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/PluginUiShadow.cs",
+    "destination": "HHub/src/Hhub.Core/PluginUiShadow.cs",
+    "sha256": "e6d9fe3866b72c7b0cd67f96e36f1548d69d548a946cec0da8ad18794876e0dd"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/ProcessEfficiency.cs",
+    "destination": "HHub/src/Hhub.Core/ProcessEfficiency.cs",
+    "sha256": "5eb7b4a0effe590a713387dd397cdf387458a8615652a468227f834ff0ad545a"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/SceneCreationPlan.cs",
+    "destination": "HHub/src/Hhub.Core/SceneCreationPlan.cs",
+    "sha256": "e6e16a78e636f52e6a95bbe5ee9d1c7c7d5454b4f848dc229b45bfeebe8dffdd"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/SceneEngine.cs",
+    "destination": "HHub/src/Hhub.Core/SceneEngine.cs",
+    "sha256": "43b9671286e8361a876f7cb3691e1d71e44899c7ba3031c7a5d75a421bbe6d49"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/ScenePlan.cs",
+    "destination": "HHub/src/Hhub.Core/ScenePlan.cs",
+    "sha256": "d7e076b9e0528b0ed66e050858f6f5e7eeafe5bea9da2f68f3016873a0b4051e"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/ScenePresets.cs",
+    "destination": "HHub/src/Hhub.Core/ScenePresets.cs",
+    "sha256": "76cfec704f68e536c06436f3c53f327531c0fe6bb45e06e6e6d13a4a03b2fb2d"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/StartupRegistration.cs",
+    "destination": "HHub/src/Hhub.Core/StartupRegistration.cs",
+    "sha256": "91742f0c76405d1f7867108ada302bb9a78470e9abeaf4c58bc9ec159aa6ab68"
+  },
+  {
+    "source": "Hhub/src/Hhub.Core/TrayBatteryCache.cs",
+    "destination": "HHub/src/Hhub.Core/TrayBatteryCache.cs",
+    "sha256": "ed29e470ff691c182b8cee2e076bc4e290445d5cb4cb942affb185d9d8d137d1"
+  },
+  {
+    "source": "Hhub/src/Hhub.PluginContracts/Contracts.cs",
+    "destination": "HHub/src/Hhub.PluginContracts/Contracts.cs",
+    "sha256": "57a3b8af4f54cb6e0c3acfdb87e43c13ebaf4b2feacb4148695015aabcd95b6e"
+  },
+  {
+    "source": "Hhub/src/Hhub.PluginContracts/Hhub.PluginContracts.csproj",
+    "destination": "HHub/src/Hhub.PluginContracts/Hhub.PluginContracts.csproj",
+    "sha256": "de3524053a9d963f33a69a093513d8868b7ba22c471f2c6dd569de3099db8705"
+  },
+  {
+    "source": "Hhub/src/Hhub.PluginHost/Hhub.PluginHost.csproj",
+    "destination": "HHub/src/Hhub.PluginHost/Hhub.PluginHost.csproj",
+    "sha256": "238481d53168158c361522f994d6ee72588ac5d752f0de6be5124a680deb1f00"
+  },
+  {
+    "source": "Hhub/src/Hhub.PluginHost/Program.cs",
+    "destination": "HHub/src/Hhub.PluginHost/Program.cs",
+    "sha256": "b42e4d5fbc0b7c6b8b5fc757265c8ee9a9778b401b5ae577e5afda635edc8240"
+  },
+  {
+    "source": "Hhub/src/Hhub.PluginSdk/Hhub.PluginSdk.csproj",
+    "destination": "HHub/src/Hhub.PluginSdk/Hhub.PluginSdk.csproj",
+    "sha256": "eff124a235e5b315d5792886b2fd191dbafcbcc9bcad11fbe77e768a0ed0d0f7"
+  },
+  {
+    "source": "Hhub/src/Hhub.PluginSdk/PluginApplication.cs",
+    "destination": "HHub/src/Hhub.PluginSdk/PluginApplication.cs",
+    "sha256": "76acef781374af3fbab5c9a82347b6c4cb4c916168e8c37c1433edab062548f5"
+  },
+  {
+    "source": "Hhub/src/Hhub.PluginUi/Hhub.PluginUi.csproj",
+    "destination": "HHub/src/Hhub.PluginUi/Hhub.PluginUi.csproj",
+    "sha256": "9400367a66063e521f1e943cf619a7be32538db300cec6510ea7df292dfe46cc"
+  },
+  {
+    "source": "Hhub/src/Hhub.PluginUi/PluginUiContext.cs",
+    "destination": "HHub/src/Hhub.PluginUi/PluginUiContext.cs",
+    "sha256": "3c1525f428e8c3bd4b1e99008b373bd9d458f8e34881ee397a2fc3b41a5e9d15"
+  },
+  {
+    "source": "Hhub/src/Hhub.PluginUi/WebPluginPage.cs",
+    "destination": "HHub/src/Hhub.PluginUi/WebPluginPage.cs",
+    "sha256": "c655a81e16f983f263b90c9656236c964bfbc416da93cf4e54d3efbfbfb498b7"
+  },
+  {
+    "source": "Hhub/src/Hhub.UnifiedHost/CertifiedPackages.cs",
+    "destination": "HHub/src/Hhub.UnifiedHost/CertifiedPackages.cs",
+    "sha256": "60c70cf42de532382a40c73d0a7e9d1b825665e90fc084ef20dfa8ec87432ec8"
+  },
+  {
+    "source": "Hhub/src/Hhub.UnifiedHost/Hhub.UnifiedHost.csproj",
+    "destination": "HHub/src/Hhub.UnifiedHost/Hhub.UnifiedHost.csproj",
+    "sha256": "fa53cd124491ff75ddddf77eb03c92ca722b0fd4656f69f318cfa37006c3f90b"
+  },
+  {
+    "source": "Hhub/src/Hhub.UnifiedHost/HostProfileLocation.cs",
+    "destination": "HHub/src/Hhub.UnifiedHost/HostProfileLocation.cs",
+    "sha256": "5772c578667c51e88962288b182261b0bd82c57c5817a5b4185aa932ac56960f"
+  },
+  {
+    "source": "Hhub/src/Hhub.UnifiedHost/PluginSession.cs",
+    "destination": "HHub/src/Hhub.UnifiedHost/PluginSession.cs",
+    "sha256": "afa2dd152a83c336c34ecfdbc863077ca424b04c743a7bf3920e9eb2bb53fba9"
+  },
+  {
+    "source": "Hhub/src/Hhub.UnifiedHost/PluginStore.cs",
+    "destination": "HHub/src/Hhub.UnifiedHost/PluginStore.cs",
+    "sha256": "7a1df206050e9ede7f5d81aa0eb7d76997bcac361119c3b2bb89be3efb77a4fc"
+  },
+  {
+    "source": "Hhub/src/Hhub.UnifiedHost/PluginTransactions.cs",
+    "destination": "HHub/src/Hhub.UnifiedHost/PluginTransactions.cs",
+    "sha256": "1c180c74f071331f5a55e163a656c0fa7307ba4adb5b0358a3e0354bdf71d7da"
+  },
+  {
+    "source": "Hhub/src/Hhub.UnifiedHost/ProfileCleanup.cs",
+    "destination": "HHub/src/Hhub.UnifiedHost/ProfileCleanup.cs",
+    "sha256": "d0b95d12c09fc964fc590464ee971fba0cb58b385276e54b001857d52517b478"
+  },
+  {
+    "source": "Hhub/src/Hhub.UnifiedHost/ServiceCatalog.cs",
+    "destination": "HHub/src/Hhub.UnifiedHost/ServiceCatalog.cs",
+    "sha256": "52c0e9b159f84397e60889aa75ab66196bf258432d153593968237692f8084c2"
+  },
+  {
+    "source": "Hhub/docs/Current-product-baseline.md",
+    "destination": "HHub/docs/Current-product-baseline.md",
+    "sha256": "f319a3e2cf73f941d2bbee77e8ea658be9dd886f08f3d9ffd8c87eb769166323"
+  },
+  {
+    "source": "Hhub/docs/Device-identification.md",
+    "destination": "HHub/docs/Device-identification.md",
+    "sha256": "8a10174b543bea78bda22054ceb5c13abf49b98b580281303e9c4a84d7501e8b"
+  },
+  {
+    "source": "Hhub/docs/FxSound-native-plugin-analysis.md",
+    "destination": "HHub/docs/FxSound-native-plugin-analysis.md",
+    "sha256": "7893e7cccc2dd64e109d987b79ff5cc0a45e9a2c3a8d5f4f0dbd4159b135940a"
+  },
+  {
+    "source": "Hhub/docs/Hhub-0.5.md",
+    "destination": "HHub/docs/Hhub-0.5.md",
+    "sha256": "1917fc033c504dce7bd7d1d28b777672dafb804e17a66fb7ee73751fef3ba005"
+  },
+  {
+    "source": "Hhub/docs/Host-first-acceptance.md",
+    "destination": "HHub/docs/Host-first-acceptance.md",
+    "sha256": "b76e84f93762ee03eb06fec014594d60ec83bf1b0123392a5311c8c737ab5b2e"
+  },
+  {
+    "source": "Hhub/docs/Implementation-2026-11-09.md",
+    "destination": "HHub/docs/Implementation-2026-11-09.md",
+    "sha256": "efe518a0044ecce4e227dca94b4ddb8b31343339559684983c5abdaad21d25e7"
+  },
+  {
+    "source": "Hhub/docs/Keyboard-EZ63-development.md",
+    "destination": "HHub/docs/Keyboard-EZ63-development.md",
+    "sha256": "9ae37078e2b6248c1d9eda021f0f7789f811bbdbe85ae5cf728bde18ad30a0c3"
+  },
+  {
+    "source": "Hhub/docs/Mouse-plugin-0.2-validation.md",
+    "destination": "HHub/docs/Mouse-plugin-0.2-validation.md",
+    "sha256": "731d59e84b574bc6e59f373ff6702597ca37e75c78057916ff802fac5c0abcc8"
+  },
+  {
+    "source": "Hhub/docs/Mouse-plugin-0.2.1-validation.md",
+    "destination": "HHub/docs/Mouse-plugin-0.2.1-validation.md",
+    "sha256": "49d239cd569fbc5a646b8b207aee8202e17eb00494ff84f5b8e08c1691ec9f93"
+  },
+  {
+    "source": "Hhub/docs/Mouse-plugin-0.3-validation.md",
+    "destination": "HHub/docs/Mouse-plugin-0.3-validation.md",
+    "sha256": "5e647b553f774e92a828b0358e9bba3a127866c16e64c448f123999c808fbf1a"
+  },
+  {
+    "source": "Hhub/docs/Mouse-plugin-0.3.1-validation.md",
+    "destination": "HHub/docs/Mouse-plugin-0.3.1-validation.md",
+    "sha256": "d98787ab9728b06b7d8534b23427635aea27b467291f77815b59ea991d30a5a1"
+  },
+  {
+    "source": "Hhub/docs/Mouse-plugin-0.3.2-validation.md",
+    "destination": "HHub/docs/Mouse-plugin-0.3.2-validation.md",
+    "sha256": "a4e2d92308c6eacd509eea37b9371b563ba40bc2f80e162c354150c767039e2f"
+  },
+  {
+    "source": "Hhub/docs/Mouse-plugin-preparation.md",
+    "destination": "HHub/docs/Mouse-plugin-preparation.md",
+    "sha256": "5b07fa6420105c792000d6e2f5937bf4a157154364c9f6fe3a43e971eced31f9"
+  },
+  {
+    "source": "Hhub/docs/Mouse-plugin-validation.md",
+    "destination": "HHub/docs/Mouse-plugin-validation.md",
+    "sha256": "00be5c61718bcb962d6a03e04884d944c75f2b4ced3a80b3c8e56b9f806a889b"
+  },
+  {
+    "source": "Hhub/docs/Phone-remote-design-v1.md",
+    "destination": "HHub/docs/Phone-remote-design-v1.md",
+    "sha256": "fbf02f087dabe3499ea9c963b616e00a0c12c0c8ead89f9905059dbcae4e38a9"
+  },
+  {
+    "source": "Hhub/docs/Plugin-certification-and-kinds.md",
+    "destination": "HHub/docs/Plugin-certification-and-kinds.md",
+    "sha256": "0082aa82423d8a5de23891876bffb190e71f8742ee54649e0b710e6fd3038971"
+  },
+  {
+    "source": "Hhub/docs/Plugin-development-v1.md",
+    "destination": "HHub/docs/Plugin-development-v1.md",
+    "sha256": "9f8101fce512445b715550dcec4c08154805a573177a9edf9522230fb8e268bd"
+  },
+  {
+    "source": "Hhub/docs/Plugin-disclosure-v1.md",
+    "destination": "HHub/docs/Plugin-disclosure-v1.md",
+    "sha256": "2ec947085c9b1b72eeab261b27dc14c3fc72280738019c0b4bfd85c1e8d0947a"
+  },
+  {
+    "source": "Hhub/docs/Plugin-market-v1.md",
+    "destination": "HHub/docs/Plugin-market-v1.md",
+    "sha256": "c168b27c775f7d229c9ff668e325daa76b4c7dab1be57bc3804e46ce088c601d"
+  },
+  {
+    "source": "Hhub/docs/Plugin-preset-compatibility.md",
+    "destination": "HHub/docs/Plugin-preset-compatibility.md",
+    "sha256": "8c20efb4cae2900bb0b610a85f40439f619de12042107a5d0af0e5ea6b82a16d"
+  },
+  {
+    "source": "Hhub/docs/Plugin-security-and-sdk.md",
+    "destination": "HHub/docs/Plugin-security-and-sdk.md",
+    "sha256": "beb36be0544567dec2dcfef86c4160672abf03869a96d073c11688bbaef5f1f1"
+  },
+  {
+    "source": "Hhub/docs/Plugin-shared-runtime.md",
+    "destination": "HHub/docs/Plugin-shared-runtime.md",
+    "sha256": "07a6ecdd354ce1aa26029f33b2ac59c14c3b6ecc420f1f726154f8e79550b143"
+  },
+  {
+    "source": "Hhub/docs/Plugin-system-v1.md",
+    "destination": "HHub/docs/Plugin-system-v1.md",
+    "sha256": "4d3cf6b3f1191e56584426286f20488ec5ab4aa83133fb340eb31b999297b3a7"
+  },
+  {
+    "source": "Hhub/docs/Plugin-WebUI.md",
+    "destination": "HHub/docs/Plugin-WebUI.md",
+    "sha256": "4ac01bbc32a8a6dca571166ab26bf772b78a1c704b19b707a143057273a8999c"
+  },
+  {
+    "source": "Hhub/docs/Scene-presets-v1.md",
+    "destination": "HHub/docs/Scene-presets-v1.md",
+    "sha256": "da79033e43fccd6c939e4551e43d5f166054891f671f1ff36ce0d0fadc427209"
+  },
+  {
+    "source": "Hhub/docs/Theme-pack-direction.md",
+    "destination": "HHub/docs/Theme-pack-direction.md",
+    "sha256": "a1c76bb4bf1abce50039871cc80d1548e0d0f609c0bb1d8828ef0e1cb69ab2e8"
+  },
+  {
+    "source": "Hhub/docs/YuqiEngine-windows-settings-analysis.md",
+    "destination": "HHub/docs/YuqiEngine-windows-settings-analysis.md",
+    "sha256": "f586171be6c880b631c8c39ff42206967c8c0f95f6013c419578c5f60ca24c4e"
+  },
+  {
+    "source": "Hhub/sdk/v1/README.md",
+    "destination": "HHub/sdk/v1/README.md",
+    "sha256": "d0ae36a392a464a2d5bfdbefcbc5c069ef7cc905e01807744c9d05b1265d0bc1"
+  },
+  {
+    "source": "Hhub/sdk/v1/schemas/manifest.schema.json",
+    "destination": "HHub/sdk/v1/schemas/manifest.schema.json",
+    "sha256": "85f95abde53271e03d62fd874ce6a36efaf17e7fd3c28edf6285827ceda05dc3"
+  },
+  {
+    "source": "Hhub/sdk/v1/schemas/request.schema.json",
+    "destination": "HHub/sdk/v1/schemas/request.schema.json",
+    "sha256": "6e5c948b387e839a69bc30fa852e10ef0a8afc8ace0afa70ede9fc0de20f7b6c"
+  },
+  {
+    "source": "Hhub/sdk/v1/schemas/response.schema.json",
+    "destination": "HHub/sdk/v1/schemas/response.schema.json",
+    "sha256": "e8d65f490a12253ad6c9cdad04065bfbf7a1371b5b168e2f0d4ee39dc5c65d4f"
+  },
+  {
+    "source": "Hhub/installer/ChineseSimplified.isl",
+    "destination": "HHub/installer/ChineseSimplified.isl",
+    "sha256": "7d544b9bb1d142cfa11f2e5d3cc8abe2e55f8e066c5124e3772675aa236e1278"
+  },
+  {
+    "source": "Hhub/installer/Hhub.iss",
+    "destination": "HHub/installer/Hhub.iss",
+    "sha256": "002e4ff6c31a4e6685033f9c5c3a3cb9e88b901c96aadc16234bb1c782e9fa02"
+  },
+  {
+    "source": "Hhub/installer/HhubShutdown.iss",
+    "destination": "HHub/installer/HhubShutdown.iss",
+    "sha256": "99a40749601b0cd46a8dd145bedec0d1341e75c3cf3e6ce64bfb44b27b6955c4"
+  },
+  {
+    "source": "Hhub/installer/HhubUnified.iss",
+    "destination": "HHub/installer/HhubUnified.iss",
+    "sha256": "1bd7372bad25c4e6abdc7e465ba5aff46435035359c073998a1bcc4c91da7233"
+  },
+  {
+    "source": "Hhub/installer/HhubUninstall.iss",
+    "destination": "HHub/installer/HhubUninstall.iss",
+    "sha256": "9fa17ef54e02907f670941a1e883384f219ac2a18df0b5c67e31d45b4fed27af"
+  },
+  {
+    "source": "Hhub/examples/Hhub.SamplePlugin/Hhub.SamplePlugin.csproj",
+    "destination": "HHub/examples/Hhub.SamplePlugin/Hhub.SamplePlugin.csproj",
+    "sha256": "b90c437eac542ceb1e8aca452e715139d4ed864e7f22e047417e8204d41fa0d5"
+  },
+  {
+    "source": "Hhub/examples/Hhub.SamplePlugin/Program.cs",
+    "destination": "HHub/examples/Hhub.SamplePlugin/Program.cs",
+    "sha256": "b29d5130acc484369f2915997447cb78c828aa74a82cab77e7efd4ab2133fd63"
+  },
+  {
+    "source": "Hhub/Directory.Build.props",
+    "destination": "HHub/Directory.Build.props",
+    "sha256": "cd91f25740d405f68ea08433e460e615e2ce0d9c23cba2c948d7792a528d31d2"
+  },
+  {
+    "source": "Hhub/global.json",
+    "destination": "HHub/global.json",
+    "sha256": "b6e9c5b94340adbb2cdbbbdcda2a49e47d161137cf79588c7b01b1ec2b9e7b2e"
+  },
+  {
+    "source": "Hhub/Hhub.Unified.slnx",
+    "destination": "HHub/Hhub.Unified.slnx",
+    "sha256": "89ca2cacb0f3b8f4e372b6f0476ecd4eddca7c6d0161377ee7434489a8a3a247"
+  },
+  {
+    "source": "Hhub/README.md",
+    "destination": "HHub/README.md",
+    "sha256": "8de8cdf4b48d1e1bff627de9b3b7f785e4d80c4808181376af1d8566245ab22d"
+  },
+  {
+    "source": "Hhub/tests/Hhub.Core.Tests/DeviceInventoryChecks.cs",
+    "destination": "HHub/tests/Hhub.Core.Tests/DeviceInventoryChecks.cs",
+    "sha256": "296bc5ff337683e3a471debbd9ba23ac2c576ca285f50957bb09c974f0116336"
+  },
+  {
+    "source": "Hhub/tests/Hhub.Core.Tests/GamingPeripheralChecks.cs",
+    "destination": "HHub/tests/Hhub.Core.Tests/GamingPeripheralChecks.cs",
+    "sha256": "e11133f772a3358cb25f40a2b9ab6e03c2fa1b8b5f8a31004caf50f5fb94a43f"
+  },
+  {
+    "source": "Hhub/tests/Hhub.Core.Tests/HardwareDisplayNameChecks.cs",
+    "destination": "HHub/tests/Hhub.Core.Tests/HardwareDisplayNameChecks.cs",
+    "sha256": "8f9485afac3abfbb0ea78fee8ea0f5ac7b964643ce1c92e2d17dc93781e0eedf"
+  },
+  {
+    "source": "Hhub/tests/Hhub.Core.Tests/Hhub.Core.Tests.csproj",
+    "destination": "HHub/tests/Hhub.Core.Tests/Hhub.Core.Tests.csproj",
+    "sha256": "9490d64739029dc526398d5a747d4e135923caa967aeef79ce83bfcdcf00de85"
+  },
+  {
+    "source": "Hhub/tests/Hhub.Core.Tests/PluginDisclosureChecks.cs",
+    "destination": "HHub/tests/Hhub.Core.Tests/PluginDisclosureChecks.cs",
+    "sha256": "b79ab0ebd68e8bdc81aa8fe850043d475e789f8d0a69299536a953674dc3282a"
+  },
+  {
+    "source": "Hhub/tests/Hhub.Core.Tests/PluginMarketChecks.cs",
+    "destination": "HHub/tests/Hhub.Core.Tests/PluginMarketChecks.cs",
+    "sha256": "56333e45ff7f47d0aed31c7beebe4f2ba52ca28391c3a6cf20c6fd0ba7d181c5"
+  },
+  {
+    "source": "Hhub/tests/Hhub.Core.Tests/PluginMarketsChecks.cs",
+    "destination": "HHub/tests/Hhub.Core.Tests/PluginMarketsChecks.cs",
+    "sha256": "4584ffe7dd5c854debb697600047d9b727f4e51868013a628c53eb831bf4f2c3"
+  },
+  {
+    "source": "Hhub/tests/Hhub.Core.Tests/PluginUiShadowChecks.cs",
+    "destination": "HHub/tests/Hhub.Core.Tests/PluginUiShadowChecks.cs",
+    "sha256": "a05c869a9e425c6acc6f196749b94adcc9e07027d3510b7254603e97897d9eca"
+  },
+  {
+    "source": "Hhub/tests/Hhub.Core.Tests/Program.cs",
+    "destination": "HHub/tests/Hhub.Core.Tests/Program.cs",
+    "sha256": "ac96974976631c72766dbebd3294c446ace479b5657a64d40a29770db714ad5f"
+  },
+  {
+    "source": "Hhub/tests/Hhub.Core.Tests/SceneCreationChecks.cs",
+    "destination": "HHub/tests/Hhub.Core.Tests/SceneCreationChecks.cs",
+    "sha256": "98e37ad747cf624d8dbcbddc4b3912b4bc9c05cda03ad3f4a7dfccc8ec227921"
+  },
+  {
+    "source": "Hhub/tests/Hhub.Core.Tests/ScenePresetChecks.cs",
+    "destination": "HHub/tests/Hhub.Core.Tests/ScenePresetChecks.cs",
+    "sha256": "86ae6021b4f84c98d9b0ac4c74f31261b2c758381a53e6c9edf33933a6dcd1b9"
+  },
+  {
+    "source": "Hhub/tests/Hhub.Core.Tests/ShellIntegrationChecks.cs",
+    "destination": "HHub/tests/Hhub.Core.Tests/ShellIntegrationChecks.cs",
+    "sha256": "beae45dad7f3445ef1611b470730ae4d4470b7122e6ccbd50230dacb049ff2d1"
+  },
+  {
+    "source": "Hhub/tests/Hhub.Platform.Tests/Hhub.Platform.Tests.csproj",
+    "destination": "HHub/tests/Hhub.Platform.Tests/Hhub.Platform.Tests.csproj",
+    "sha256": "d4eeac7deff23809dc363b9614d85c16be91ee5bc6787e8c53cc74435c914786"
+  },
+  {
+    "source": "Hhub/tests/Hhub.Platform.Tests/Program.cs",
+    "destination": "HHub/tests/Hhub.Platform.Tests/Program.cs",
+    "sha256": "427532fd33e1847cacc16fb2f3e7635a702c0716c4e87faa80e934f070611541"
+  },
+  {
+    "source": "Hhub/tests/Hhub.UnifiedHost.Tests/Hhub.UnifiedHost.Tests.csproj",
+    "destination": "HHub/tests/Hhub.UnifiedHost.Tests/Hhub.UnifiedHost.Tests.csproj",
+    "sha256": "ed8782e969b2a4e65269fd6ee2592cb7ade78538b6b90c879ab6734d419358e7"
+  },
+  {
+    "source": "Hhub/tests/Hhub.UnifiedHost.Tests/ProfileCleanupChecks.cs",
+    "destination": "HHub/tests/Hhub.UnifiedHost.Tests/ProfileCleanupChecks.cs",
+    "sha256": "44e6ccb2bc72927e09f1ec756efbea08b0e118768edd66ea31c13827846cc249"
+  },
+  {
+    "source": "Hhub/tests/Hhub.UnifiedHost.Tests/Program.cs",
+    "destination": "HHub/tests/Hhub.UnifiedHost.Tests/Program.cs",
+    "sha256": "70930d7f7c934f1617da0c5cde62f3074f546cffb94dbc1998ebc065ac76d9fa"
+  },
+  {
+    "source": "Hhub/tools/Hhub.PluginTool/Hhub.PluginTool.csproj",
+    "destination": "HHub/tools/Hhub.PluginTool/Hhub.PluginTool.csproj",
+    "sha256": "25bbe4dda62887b69a4f0bba4fde03b154741b681b97b69fabc526f43c0f2664"
+  },
+  {
+    "source": "Hhub/tools/Hhub.PluginTool/Program.cs",
+    "destination": "HHub/tools/Hhub.PluginTool/Program.cs",
+    "sha256": "fdc5f6d5d8f6bb1190576265c3ba276d8bc0d65b56c101978b7ab8f2c5d44ba1"
+  },
+  {
+    "source": "Hhub/tools/Hhub.PluginPreview/App.xaml",
+    "destination": "HHub/tools/Hhub.PluginPreview/App.xaml",
+    "sha256": "72d3e209ddb9b2db4dcdfe574194cd2056066a54e9efb099ae0cadadee5e1891"
+  },
+  {
+    "source": "Hhub/tools/Hhub.PluginPreview/App.xaml.cs",
+    "destination": "HHub/tools/Hhub.PluginPreview/App.xaml.cs",
+    "sha256": "8c516bc054368bdc09dad171883c2c88e745671f8d870f02c98040bb85b7cce8"
+  },
+  {
+    "source": "Hhub/tools/Hhub.PluginPreview/Hhub.PluginPreview.csproj",
+    "destination": "HHub/tools/Hhub.PluginPreview/Hhub.PluginPreview.csproj",
+    "sha256": "0cd3477dc3162ed7ee022ee2256c6b770d43d1f54d2b326d279dac465465e13d"
+  },
+  {
+    "source": "Hhub/tools/Build-UnifiedPreview.ps1",
+    "destination": "HHub/tools/Build-UnifiedPreview.ps1",
+    "sha256": "9073b9a22730459e9f4b0baacf4ec9477dbd298ac41115305dc910bac7e94f03"
+  },
+  {
+    "source": "Hhub/tools/Build-UnifiedInstaller.ps1",
+    "destination": "HHub/tools/Build-UnifiedInstaller.ps1",
+    "sha256": "a053f718df83f400042359f1eb09b49ebccca7b5b94517c2eaeab0db57b0f944"
+  },
+  {
+    "source": "Hhub/tools/Test-UnifiedInstaller.ps1",
+    "destination": "HHub/tools/Test-UnifiedInstaller.ps1",
+    "sha256": "3590c3485a50b3de6fffe37d83cbac896b40938db614e8445878d8e86a357b31"
+  }
+]

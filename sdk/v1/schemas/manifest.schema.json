@@ -1,0 +1,308 @@
+{
+  "type": [
+    "object",
+    "null"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": [
+        "string",
+        "integer"
+      ],
+      "pattern": "^-?(?:0|[1-9]\\d*)$",
+      "const": 2
+    },
+    "protocol": {
+      "type": "string",
+      "const": "hhub.plugin/1"
+    },
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "device",
+        "function"
+      ]
+    },
+    "entryPoint": {
+      "type": "string"
+    },
+    "arguments": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "minimum": {
+                "type": [
+                  "string",
+                  "number",
+                  "null"
+                ],
+                "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d\u002B)?(?:[eE][\u002B-]?\\d\u002B)?$"
+              },
+              "maximum": {
+                "type": [
+                  "string",
+                  "number",
+                  "null"
+                ],
+                "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d\u002B)?(?:[eE][\u002B-]?\\d\u002B)?$"
+              },
+              "maxLength": {
+                "type": [
+                  "string",
+                  "integer"
+                ],
+                "pattern": "^-?(?:0|[1-9]\\d*)$"
+              },
+              "maxItems": {
+                "type": [
+                  "string",
+                  "integer"
+                ],
+                "pattern": "^-?(?:0|[1-9]\\d*)$"
+              },
+              "items": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "minimum": {
+                    "type": [
+                      "string",
+                      "number",
+                      "null"
+                    ],
+                    "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d\u002B)?(?:[eE][\u002B-]?\\d\u002B)?$"
+                  },
+                  "maximum": {
+                    "type": [
+                      "string",
+                      "number",
+                      "null"
+                    ],
+                    "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d\u002B)?(?:[eE][\u002B-]?\\d\u002B)?$"
+                  },
+                  "maxLength": {
+                    "type": [
+                      "string",
+                      "integer"
+                    ],
+                    "pattern": "^-?(?:0|[1-9]\\d*)$"
+                  },
+                  "maxItems": {
+                    "type": [
+                      "string",
+                      "integer"
+                    ],
+                    "pattern": "^-?(?:0|[1-9]\\d*)$"
+                  },
+                  "items": {
+                    "$ref": "#/properties/capabilities/items/properties/value/properties/items"
+                  },
+                  "properties": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "type": {
+                          "type": "string"
+                        },
+                        "minimum": {
+                          "type": [
+                            "string",
+                            "number",
+                            "null"
+                          ],
+                          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d\u002B)?(?:[eE][\u002B-]?\\d\u002B)?$"
+                        },
+                        "maximum": {
+                          "type": [
+                            "string",
+                            "number",
+                            "null"
+                          ],
+                          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d\u002B)?(?:[eE][\u002B-]?\\d\u002B)?$"
+                        },
+                        "maxLength": {
+                          "type": [
+                            "string",
+                            "integer"
+                          ],
+                          "pattern": "^-?(?:0|[1-9]\\d*)$"
+                        },
+                        "maxItems": {
+                          "type": [
+                            "string",
+                            "integer"
+                          ],
+                          "pattern": "^-?(?:0|[1-9]\\d*)$"
+                        },
+                        "items": {
+                          "$ref": "#/properties/capabilities/items/properties/value/properties/items"
+                        },
+                        "properties": {
+                          "$ref": "#/properties/capabilities/items/properties/value/properties/items/properties/properties"
+                        }
+                      },
+                      "required": [
+                        "type"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "type"
+                ],
+                "additionalProperties": false
+              },
+              "properties": {
+                "$ref": "#/properties/capabilities/items/properties/value/properties/items/properties/properties"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          },
+          "writable": {
+            "type": "boolean",
+            "default": false
+          },
+          "persistence": {
+            "type": "string",
+            "default": "session"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "value"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "provides": {
+      "type": "array",
+      "items": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "contract": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "capabilityIds": {
+            "type": "array",
+            "items": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "required": [
+          "contract",
+          "version",
+          "capabilityIds"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "requires": {
+      "type": "array",
+      "items": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "contract": {
+            "type": "string"
+          },
+          "majorVersion": {
+            "type": [
+              "string",
+              "integer"
+            ],
+            "pattern": "^-?(?:0|[1-9]\\d*)$"
+          },
+          "optional": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "contract",
+          "majorVersion"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "protocol",
+    "id",
+    "name",
+    "version",
+    "kind",
+    "entryPoint"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

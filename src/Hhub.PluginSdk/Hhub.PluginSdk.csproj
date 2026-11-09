@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net10.0</TargetFramework><Version>1.0.0-preview.1</Version></PropertyGroup>
+  <ItemGroup><ProjectReference Include="../Hhub.PluginContracts/Hhub.PluginContracts.csproj" /></ItemGroup>
+</Project>

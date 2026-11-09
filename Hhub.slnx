@@ -1,0 +1,9 @@
+<Solution>
+  <Configurations><Platform Name="x64" /></Configurations>
+  <Project Path="src/Hhub.Core/Hhub.Core.csproj" />
+  <Project Path="src/Hhub.PluginHost/Hhub.PluginHost.csproj" />
+  <Project Path="src/Hhub.PluginUi/Hhub.PluginUi.csproj" />
+  <Project Path="src/Hhub.App/Hhub.App.csproj" />
+  <Project Path="tests/Hhub.Core.Tests/Hhub.Core.Tests.csproj" />
+  <Project Path="tests/Hhub.Platform.Tests/Hhub.Platform.Tests.csproj" />
+</Solution>

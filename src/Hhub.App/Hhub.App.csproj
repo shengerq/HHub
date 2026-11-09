@@ -1,0 +1,78 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+    <TargetFramework>net10.0-windows10.0.22621.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.22000.0</TargetPlatformMinVersion>
+    <UseWinUI>true</UseWinUI>
+    <WindowsPackageType>None</WindowsPackageType>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PlatformTarget>x64</PlatformTarget>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\Hhub.ico</ApplicationIcon>
+    <RootNamespace>Hhub.App</RootNamespace>
+    <Version>0.5.0</Version>
+    <Product>Hhub</Product>
+    <Description>Hhub 外设管理平台</Description>
+    <InformationalVersion>0.5</InformationalVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(UseUnifiedHost)' == 'true'">
+    <DefineConstants>$(DefineConstants);HHUB_UNIFIED</DefineConstants>
+    <AssemblyName>Hhub.Preview</AssemblyName>
+    <Version>0.6.0-preview.1</Version>
+    <InformationalVersion>0.6.0-preview.1</InformationalVersion>
+    <Description>Hhub 统一插件体系主体预览</Description>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(UseUnifiedHost)' == 'true' and '$(HhubTestSignerFingerprint)' != ''">
+    <DefineConstants>$(DefineConstants);HHUB_TEST_CERTIFICATION</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(UseUnifiedHost)' == 'true'">
+    <Compile Remove="MainWindow*.cs" />
+    <ProjectReference Include="../Hhub.PluginContracts/Hhub.PluginContracts.csproj" />
+    <ProjectReference Include="../Hhub.UnifiedHost/Hhub.UnifiedHost.csproj" />
+    <AssemblyMetadata Include="Hhub.TestCertification" Value="$(HhubTestSignerFingerprint)" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseUnifiedHost)' != 'true'">
+    <Compile Remove="UnifiedWindow.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.6.4" />
+    <PackageReference Include="NAudio.Wasapi" Version="2.2.1" />
+    <ProjectReference Include="../Hhub.Core/Hhub.Core.csproj" />
+    <ProjectReference Include="../Hhub.PluginUi/Hhub.PluginUi.csproj" Condition="'$(UseUnifiedHost)' != 'true'" />
+    <None Remove="Assets/Hhub.ico" />
+    <Content Update="Assets\Hhub.ico" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Remove="Assets/Hhub.png" />
+    <Content Update="Assets\Hhub.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Update="Assets\Sponsor-design-v1.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Update="Assets\Sponsor-qr-*.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Update="licenses/*.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+  <!-- Unpackaged WinUI publish omits generated application resources (WindowsAppSDK #6720). -->
+  <Target Name="IncludeWinUIResourcesInPublish" AfterTargets="ComputeFilesToPublish">
+    <Error Condition="!Exists('$(TargetDir)$(AssemblyName).pri')" Text="Application PRI was not generated." />
+    <Error Condition="!Exists('$(TargetDir)App.xbf')" Text="Application XAML was not generated." />
+    <ItemGroup>
+      <_HhubPublishResource Include="$(TargetDir)$(AssemblyName).pri;$(TargetDir)**\*.xbf" />
+      <ResolvedFileToPublish Include="@(_HhubPublishResource)">
+        <RelativePath>%(_HhubPublishResource.RecursiveDir)%(_HhubPublishResource.Filename)%(_HhubPublishResource.Extension)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+  <!-- One common worker entry shares this package's runtime; plugin ZIPs carry no runtime. -->
+  <Target Name="PublishSharedPluginHost" AfterTargets="Publish">
+    <PropertyGroup>
+      <_SharedPluginHostDir>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/$(IntermediateOutputPath)shared-plugin-host/'))</_SharedPluginHostDir>
+    </PropertyGroup>
+    <MSBuild Projects="$(MSBuildProjectDirectory)/../Hhub.PluginHost/Hhub.PluginHost.csproj"
+             Targets="Restore;Publish" BuildInParallel="false"
+             Properties="Configuration=$(Configuration);Platform=x64;RuntimeIdentifier=win-x64;SelfContained=true;PublishDir=$(_SharedPluginHostDir)" />
+    <ItemGroup>
+      <_SharedPluginHostFile Include="$(_SharedPluginHostDir)Hhub.PluginHost.exe;$(_SharedPluginHostDir)Hhub.PluginHost.dll;$(_SharedPluginHostDir)Hhub.PluginHost.deps.json;$(_SharedPluginHostDir)Hhub.PluginHost.runtimeconfig.json" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_SharedPluginHostFile)" DestinationFolder="$(PublishDir)" />
+  </Target>
+</Project>

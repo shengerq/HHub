@@ -1,0 +1,107 @@
+{
+  "type": [
+    "object",
+    "null"
+  ],
+  "properties": {
+    "type": {
+      "type": "string"
+    },
+    "requestId": {
+      "type": "string"
+    },
+    "protocol": {
+      "type": "string"
+    },
+    "pluginId": {
+      "type": "string"
+    },
+    "success": {
+      "type": "boolean"
+    },
+    "revision": {
+      "type": [
+        "string",
+        "integer"
+      ],
+      "pattern": "^-?(?:0|[1-9]\\d*)$",
+      "default": 0
+    },
+    "values": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "default": null
+    },
+    "errorCode": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null
+    },
+    "backgroundActivity": {
+      "type": "boolean",
+      "default": false
+    },
+    "targetId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null
+    },
+    "targets": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "connection": {
+            "type": "string"
+          },
+          "online": {
+            "type": "boolean"
+          },
+          "simulated": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "connection",
+          "online"
+        ],
+        "additionalProperties": false
+      },
+      "default": null
+    }
+  },
+  "required": [
+    "type",
+    "requestId",
+    "protocol",
+    "pluginId",
+    "success"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

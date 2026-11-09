@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net10.0</TargetFramework><Version>0.6.0-preview.1</Version><Description>Development host integration harness; not a stable public plugin SDK.</Description></PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Hhub.PluginContracts/Hhub.PluginContracts.csproj" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
+  </ItemGroup>
+</Project>
