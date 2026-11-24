@@ -199,12 +199,14 @@ public sealed partial class MainWindow
         ScrollViewer.SetHorizontalScrollBarVisibility(list, ScrollBarVisibility.Disabled);
         ScrollViewer.SetHorizontalScrollMode(list, ScrollMode.Disabled);
         ScrollViewer.SetVerticalScrollBarVisibility(list, ScrollBarVisibility.Auto);
+        string? previewedByClick = null;
         list.ItemClick += (_, args) =>
         {
             var device = ((DeviceRow)args.ClickedItem).Device;
-            if (onSelected is null) OpenDevice(device);
+            if (onSelected is null || device.ContainsInstance(previewedByClick)) OpenDevice(device);
             else
             {
+                previewedByClick = device.InstanceId;
                 foreach (var row in rows) row.SetSelected(row.Device.InstanceId == device.InstanceId,
                     row.Device.InstanceId == device.InstanceId ? Selection : PanelSurface);
                 onSelected(device);
@@ -351,7 +353,7 @@ public sealed partial class MainWindow
             _primaryBattery.Text = display.Battery is { } level ? $"{level:0}%" : "";
             _primaryBattery.Visibility = display.Battery is null ? Visibility.Collapsed : Visibility.Visible;
         }
-        if (_primaryConnection is not null) _primaryConnection.Text = HomeDeviceConnection(_primaryDevice, display);
+        if (_primaryConnection is not null) _primaryConnection.Text = display.Connection;
         UpdatePrimaryOverview();
     }
 
@@ -360,16 +362,31 @@ public sealed partial class MainWindow
         if (_primaryDevice is not { } device || _primaryOverview is not { } panel || _primaryConfiguration is not { } picker) return;
         var plugin = OverviewPlugin(device);
         var state = plugin is null ? new DeviceOverviewState([], null, []) : ReadOverview(plugin, device);
-        var rows = state.Rows.Select(row => $"{row.Label}  {row.Value}").ToArray();
-        if (!panel.Children.OfType<TextBlock>().Select(text => text.Text).SequenceEqual(rows))
+        var rows = state.Rows;
+        string signature = string.Join("\n", rows.Select(row => $"{row.Label}\t{row.Value}"));
+        if (!string.Equals(panel.Tag as string, signature, StringComparison.Ordinal))
         {
+            panel.Tag = signature;
             panel.Children.Clear();
-            foreach (string row in rows)
+            if (rows.Length > 0) panel.Children.Add(Text("参数", 13, true));
+            var columns = new Grid { ColumnSpacing = 10 };
+            int columnCount = rows.Length > 8 ? 2 : 1;
+            int rowsPerColumn = (rows.Length + columnCount - 1) / columnCount;
+            for (int column = 0; column < columnCount; column++)
             {
-                var text = Text(row, 14);
-                text.TextWrapping = TextWrapping.Wrap;
-                panel.Children.Add(text);
+                columns.ColumnDefinitions.Add(new() { Width = new(1, GridUnitType.Star) });
+                var values = new StackPanel { Spacing = 4 };
+                foreach (var row in rows.Skip(column * rowsPerColumn).Take(rowsPerColumn))
+                {
+                    var text = new TextBlock { FontSize = 12, TextWrapping = TextWrapping.Wrap };
+                    text.Inlines.Add(new Microsoft.UI.Xaml.Documents.Run { Text = row.Label + "  ", Foreground = Muted });
+                    text.Inlines.Add(new Microsoft.UI.Xaml.Documents.Run { Text = row.Value, Foreground = Accent });
+                    values.Children.Add(text);
+                }
+                Grid.SetColumn(values, column);
+                columns.Children.Add(values);
             }
+            panel.Children.Add(columns);
         }
         panel.Visibility = rows.Length > 0 ? Visibility.Visible : Visibility.Collapsed;
         picker.Visibility = plugin is null ? Visibility.Collapsed : Visibility.Visible;

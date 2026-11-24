@@ -6,6 +6,16 @@ namespace Hhub.Core;
 public static class HardwareDisplayName
 {
     private const RegexOptions Options = RegexOptions.IgnoreCase | RegexOptions.CultureInvariant;
+    private const string Trademark = @"(?:\(R\)|\(TM\)|[®™])*";
+    private static readonly Regex ReportedBrand = new(
+        $@"^(?:\d{{1,2}}(?:st|nd|rd|th) Gen\s+)?(?:Intel{Trademark}(?:\s+(?:Core|Xeon|Pentium|Celeron|Atom){Trademark})?|NVIDIA{Trademark}(?:\s+(?:GeForce|Quadro){Trademark})?|AMD{Trademark}(?:\s+(?:Ryzen|Radeon|EPYC|Athlon|Threadripper){Trademark})?|Qualcomm{Trademark}(?:\s+Snapdragon{Trademark})?|Apple|MediaTek|ARM|IBM|Ampere|SiFive|VIA|Zhaoxin|Loongson|Microsoft|GeForce|Radeon){Trademark}(?=\s+\S)", Options);
+
+    public static (string Brand, string Model) SplitReportedName(string reported)
+    {
+        string name = reported.Trim();
+        var brand = ReportedBrand.Match(name);
+        return brand.Success ? (brand.Value, name[brand.Length..].TrimStart()) : ("", name.Length == 0 ? "—" : name);
+    }
 
     public static string Format(string key, string reported)
     {

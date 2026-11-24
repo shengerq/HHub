@@ -7,7 +7,7 @@ namespace Hhub.UnifiedHost;
 
 public sealed partial class PluginStore
 {
-    private async Task<InstalledPackage> InstallTransactionAsync(string source, Func<InstalledPackage, Task>? verifyUpdate)
+    private async Task<InstalledPackage> InstallTransactionAsync(string source, Func<InstalledPackage, Task>? verifyUpdate, string? expectedArchiveHash)
     {
         await _gate.WaitAsync().ConfigureAwait(false);
         string staging = Path.Combine(Root, "staging", Guid.NewGuid().ToString("N"));
@@ -22,6 +22,8 @@ public sealed partial class PluginStore
                 using var output = File.Create(archivePath); await input.CopyToAsync(output).ConfigureAwait(false);
             }
             var verified = CertifiedPackages.Verify(archivePath, _policy);
+            if (expectedArchiveHash is not null && !verified.Sha256.Equals(expectedArchiveHash, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidDataException("plugin.archive-changed");
             string id = verified.Definition.Id;
             using var session = AcquirePluginLease(id);
             string pluginRoot = Path.Combine(Root, "plugins", id);

@@ -57,8 +57,38 @@ public sealed partial class PluginStore
         return (plugins.ToArray(), errors.ToArray());
     }
 
-    public Task<InstalledPackage> InstallAsync(string source, Func<InstalledPackage, Task>? verifyUpdate = null)
-        => InstallTransactionAsync(source, verifyUpdate);
+    // Chrome such as the sidebar only needs titles and navigation hints. Read the installed
+    // manifest without hashing the whole payload; a plugin is fully verified before it runs.
+    public (InstalledPackage[] Plugins, string[] Errors) DiscoverManifests()
+    {
+        var plugins = new List<InstalledPackage>(); var errors = new List<string>();
+        errors.AddRange(RecoveryIssues);
+        foreach (string folder in Directory.GetDirectories(Path.Combine(Root, "plugins")))
+        {
+            try
+            {
+                EnsurePlainDirectory(folder);
+                if (File.Exists(Path.Combine(folder, "pending.json"))) throw new InvalidDataException("plugin.update-recovery-required");
+                var receipt = PluginApi.Read<InstallReceipt>(File.ReadAllText(Path.Combine(folder, "current.json")));
+                if (!PluginApi.ValidId(Path.GetFileName(folder)) || !IsHash(receipt.Hash)) throw new InvalidDataException("plugin.receipt-invalid");
+                string payload = Path.Combine(folder, receipt.Hash);
+                EnsurePlainDirectory(payload);
+                var manifest = new FileInfo(Path.Combine(payload, "plugin.json"));
+                if (manifest.Length > 1024 * 1024) throw new InvalidDataException("package.manifest-too-large");
+                var definition = PluginApi.Read<PluginDefinition>(File.ReadAllText(manifest.FullName));
+                PluginApi.Validate(definition);
+                if (definition.Id != Path.GetFileName(folder) || definition.Version != receipt.Version)
+                    throw new InvalidDataException("plugin.receipt-mismatch");
+                plugins.Add(new(definition, payload, receipt.Hash));
+            }
+            catch (Exception error) when (error is IOException or InvalidDataException or UnauthorizedAccessException or JsonException or CryptographicException)
+            { errors.Add(Path.GetFileName(folder) + ": " + error.Message); }
+        }
+        return (plugins.ToArray(), errors.ToArray());
+    }
+
+    public Task<InstalledPackage> InstallAsync(string source, Func<InstalledPackage, Task>? verifyUpdate = null,
+        string? expectedArchiveHash = null) => InstallTransactionAsync(source, verifyUpdate, expectedArchiveHash);
 
     public InstalledPackage VerifyInstalled(InstalledPackage plugin)
     {
@@ -106,7 +136,8 @@ public sealed partial class PluginStore
         var definition = PluginApi.Read<PluginDefinition>(File.ReadAllText(manifestPath)); PluginApi.Validate(definition);
         if (definition.Id != inventory.PluginId || definition.Version != inventory.Version
             || !inventory.Files.Any(file => file.Path == definition.EntryPoint)) throw new InvalidDataException("package.identity-mismatch");
-        return new(definition, directory, packageHash);
+        var verified = new InstalledPackage(definition, directory, packageHash);
+        return verified;
     }
 
     // Caller stops the session first. Preserving data never preserves executable payloads.

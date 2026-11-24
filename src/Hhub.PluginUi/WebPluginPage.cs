@@ -20,6 +20,7 @@ public sealed class WebPluginPage : IPluginPageView
     private const string Origin = "https://plugin.hhub.local";
     public FrameworkElement Root => _root;
     public IReadOnlyList<FrameworkElement> HeaderControls => [];
+    public event Action<string>? SectionChanged;
     public WebPluginPage(PluginUiContext context, string folder, string entry = "index.html")
     {
         _context = context;
@@ -81,6 +82,12 @@ public sealed class WebPluginPage : IPluginPageView
             var root = doc.RootElement;
             if (root.GetProperty("type").GetString() == "back") { _context.GoBack?.Invoke(); return; }
             if (root.GetProperty("type").GetString() == "ready") { _lastFrame = ""; Refresh(); return; }
+            if (root.GetProperty("type").GetString() == "section" &&
+                root.TryGetProperty("section", out var section) && section.GetString() is { Length: <= 64 } name)
+            {
+                SectionChanged?.Invoke(name);
+                return;
+            }
             if (root.GetProperty("type").GetString() != "command") return;
             id = root.GetProperty("id").GetString();
             if (string.IsNullOrWhiteSpace(id) || id.Length > 128) throw new InvalidDataException("缺少 WebUI 请求标识");

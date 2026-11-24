@@ -22,7 +22,7 @@ public partial class App : Application
         _window = new UnifiedWindow();
         _window.Activate();
 #else
-        string root = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Hhub");
+        string root = AppStorage.DefaultRoot;
         _instanceLease = InstanceLease.TryAcquire(root);
         if (_instanceLease is null && !HasOlderInstance())
         {

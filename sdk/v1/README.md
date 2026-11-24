@@ -28,11 +28,39 @@ dotnet run --project tests/Hhub.UnifiedHost.Tests -c Release
 
 ## 插件入口与后端
 
+### 首页监测服务
+
+首页消费 `home.monitor` 主版本 1。插件在 `provides` 中声明服务、版本和自己支持的字段，并在 `read` 中返回这些能力的值。主体按服务和字段 ID 绑定，不按插件 ID 识别。采集方式、驱动和授权逻辑由插件维护。
+
+| 位置 | 字段与单位 |
+| --- | --- |
+| CPU | `cpu.name`，`cpu.load`（%），`cpu.cores`，`cpu.threads`，`cpu.clock`（MHz），`cpu.power`（W），`cpu.temperature`（°C） |
+| GPU | `gpu.name`，`gpu.load`（%），`gpu.clock`（MHz），`gpu.power`（W），`gpu.temperature`、`gpu.memory.temperature`（°C），`gpu.memory.used`、`gpu.memory.total`（GiB） |
+| 内存 | `memory.load`（%），`memory.used`、`memory.total`（GiB），`memory.clock`（MT/s），`memory.temperature`（°C） |
+| 网络 | `network.download`、`network.upload`（Mbps） |
+| 磁盘 | `storage.disks` 为物理盘清单，元素包含 `name`、`total`（GiB）和 `temperature`（°C，值为 `[number]` 或空数组）。`storage.volumes` 为逻辑卷清单，元素包含 `name`、`used`、`total`（GiB）。 |
+
+设备名称是字符串，数值采样为 `[number]` 或空数组。暂未实现的字段可以省略，首页显示「—」。Lab 可用现有 `--plugin-lab` 入口加载独立测试包来验证该契约。
+
+监测插件可以声明会话级可写布尔能力 `monitor.sensor.authorization.request`。写入 `true` 申请授权，并由插件在 `monitor.sensor.authorization` 报告实际进度和结果。请求值只确认收到申请，授权采集由插件负责。
+
+### 外设发现服务
+
+首页与场景页消费 `devices.discovery` 主版本 1。提供方声明只读能力 `devices.connected`，返回当前连接的外设数组。每项包含稳定的 `id`、显示用的 `name`、`category` 和 `connection`。同一物理外设的接口由提供方归并成一项。没有外设时返回空数组。配置与电量由对应的设备插件提供。
+
+设备插件以同一个实体 `id` 返回设备目标，主体用匹配目标的 `name` 更新设备名称。设备插件可以在签名包根目录提供 `device-page.json`，按 `sections` 和 `rows` 声明设置页。`header` 中的行在所有页签上方可用。分组可用 `selector` 指定选择器名称，每次显示其中一行的编辑器。`illustration` 引用包内的 SVG 或 PNG，也可以在顶层 `artwork` 中通过 `valueFrom` 和 `variants` 声明由单项整数能力选择的图片，取值从 1 开始，并在需要显示图像的分组设置 `showArtwork`。每行引用已声明的能力 ID，由主体渲染标准控件，再通过 `set` 写入并确认回读。缺少当前读数时，该行不可写。
+
 参考 `examples/Hhub.SamplePlugin/Program.cs`。入口检查 `--hhub-plugin-v1`，读取自身程序集旁的 plugin.json，再调用 PluginApplication.RunAsync。共享启动器下 AppContext.BaseDirectory 是主体目录，因此不能用它查找插件资源，应使用自身 Assembly.Location。
 
 实现 IPluginBackend：DiscoverAsync 返回 PluginTarget 数组；ReadAsync(targetId) 读取该目标的完整能力对象，WriteAsync(targetId, capabilityId, value) 写一个完整能力值，BackgroundActivity 表示确有持续任务，DisposeAsync 释放任务与资源。ReadAsync 的值集合与清单能力完全对应。SDK 克隆状态，写入后独立读取确认；失败尝试恢复原能力值并验证完整基线，恢复失败进入未知状态，重新成功读取前拒绝写入。
 
 目标 ID 由插件生成并保持稳定，不能用显示名区分同型号设备。PluginTarget 包含 id、name、kind、connection、online、simulated；kind 与插件类别一致。function 插件也需要声明软件服务目标，不能跳过发现。多个在线目标必须明确选择；断线目标不自动替换，重连后先读再写。无硬件序列号时，开发者必须说明身份限制，不能承诺跨端口和有线/无线身份自动合并。
+
+### 托盘电量服务
+
+Lab 提供 `tray.battery` 1.0。提供方在 `provides` 声明该服务以及电量能力，清单包含 `device.battery.read` 权限，签名包根目录包含独立的 `tray-battery.exe`。Lab 有一个符合条件的提供方时，由 C++ 托盘启动该程序，将托盘 PID 作为唯一参数传入。程序在标准输出发出 4 字节小端无符号整数，0 到 100 表示百分比，101 表示读数不可用。提供方负责处理设备断开、读数过期与托盘退出，主体使用 Windows 托盘提示显示插件名和百分比。
+
+`tray.battery` 1.1 追加插件数据目录作为第二个参数，每帧在电量值后追加 32 字节外设 ID 哈希。读数 102 到 202 表示上次确认的百分比，减去 102 得到原值。主页按外设 ID 匹配该数据。插件可将上次读数缓存在自己的数据目录，设备断开或无法匹配 ID 时发出 101。
 
 真实插件必须把后端替换为实际硬件或软件实现。模拟状态不属于真实读数；报文、目标身份与设备支持范围未知时不得声明已实现。
 

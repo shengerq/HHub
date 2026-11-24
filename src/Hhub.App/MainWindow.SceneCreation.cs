@@ -147,8 +147,8 @@ public sealed partial class MainWindow
                     if (chosen is null) return;
                     valueKey = device.InstanceId + "/" + chosen.Key;
                     var initial = draft.Values.TryGetValue(valueKey, out var values) ? values : chosen.Values;
-                    form = CreateCommandForm(chosen.Command with
-                    { Parameters = chosen.Command.Parameters.Where(parameter => parameter.Key != "deviceInstanceId").ToArray() }, initial, showAdvanced: false);
+                    var provider = available.First(item => item.plugin.Manifest.Id == chosen.PluginId).plugin;
+                    form = CreateDeviceConfigurationForm(device, provider, chosen.Command, initial);
                     content.Content = form.View;
                 }
                 choice.SelectionChanged += (_, _) => Load(); Load();

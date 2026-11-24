@@ -134,17 +134,22 @@ public sealed class PluginCatalog(AppStorage storage)
         return (packages.ToArray(), errors.ToArray());
     }
 
-    public CatalogResult Discover()
+    public CatalogResult Discover() => Discover(CancellationToken.None);
+
+    public CatalogResult Discover(CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         List<InstalledPlugin> plugins = [];
         List<string> errors = [];
         foreach (string folder in Directory.EnumerateDirectories(storage.Plugins))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             if (Directory.Exists(Path.Combine(PendingUpdates, Path.GetFileName(folder)))) continue;
             try { plugins.Add(Read(folder)); }
             catch (Exception ex) when (ex is IOException or InvalidDataException or JsonException or ArgumentException or UnauthorizedAccessException)
             { errors.Add($"{Path.GetFileName(folder)}：{ex.Message}"); }
         }
+        cancellationToken.ThrowIfCancellationRequested();
         return new(plugins.OrderBy(p => p.Manifest.Name).ToArray(), errors);
     }
 

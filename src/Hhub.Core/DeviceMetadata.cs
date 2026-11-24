@@ -49,7 +49,7 @@ public sealed record DeviceMetadata(string Name, string Connection, double? Batt
     }
     private static DeviceOverviewRow[] ReadRows(JsonElement item) =>
         item.TryGetProperty("overview", out var rows) && rows.ValueKind == JsonValueKind.Array
-            ? rows.EnumerateArray().Take(8).Where(row => row.ValueKind == JsonValueKind.Object)
+            ? rows.EnumerateArray().Take(24).Where(row => row.ValueKind == JsonValueKind.Object)
                 .Select(row => (Label: Read(row, "label"), Value: Read(row, "value")))
                 .Where(row => row.Label is { Length: <= 40 } && row.Value is { Length: <= 128 })
                 .Select(row => new DeviceOverviewRow(row.Label!, row.Value!)).ToArray()

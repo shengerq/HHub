@@ -40,7 +40,7 @@ public sealed partial class MainWindow
     {
         _visualRefreshPending = true;
         _themePreferencePending |= applyThemePreference;
-        if (!_uiLoaded || _selectorOpen || _visualRefreshQueued || _closing) return;
+        if (!_uiLoaded || _hiddenToTray || _selectorOpen || _visualRefreshQueued || _closing) return;
         _visualRefreshQueued = true;
         DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, FlushVisualRefresh);
     }
@@ -48,7 +48,7 @@ public sealed partial class MainWindow
     private void FlushVisualRefresh()
     {
         _visualRefreshQueued = false;
-        if (_selectorOpen || _closing) return;
+        if (_hiddenToTray || _selectorOpen || _closing) return;
         if (_themePreferencePending)
         {
             _themePreferencePending = false;

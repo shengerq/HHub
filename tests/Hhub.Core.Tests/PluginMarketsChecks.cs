@@ -72,5 +72,22 @@ internal static class PluginMarketsChecks
             check(result.Errors.Length == 1 && result.Errors[0].Contains("/broken"), "a failed market is reported without discarding successful markets");
         }
         finally { listener.Stop(); }
+
+        using var pendingListener = new TcpListener(IPAddress.Loopback, 0);
+        pendingListener.Start();
+        int pendingPort = ((IPEndPoint)pendingListener.LocalEndpoint).Port;
+        using var cancellation = new CancellationTokenSource();
+        using var testTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        var requestTask = PluginMarkets.ReadAsync([$"http://127.0.0.1:{pendingPort}/pending"], cancellation.Token);
+        using var pendingClient = await pendingListener.AcceptTcpClientAsync(testTimeout.Token);
+        await using var pendingStream = pendingClient.GetStream();
+        using var pendingReader = new StreamReader(pendingStream, Encoding.ASCII, leaveOpen: true);
+        while (!string.IsNullOrEmpty(await pendingReader.ReadLineAsync(testTimeout.Token))) { }
+        await pendingStream.WriteAsync("HTTP/1.1 200 OK\r\nContent-Length: 64\r\n\r\n{"u8.ToArray(), testTimeout.Token);
+        cancellation.Cancel();
+        bool canceled = false;
+        try { await requestTask.WaitAsync(testTimeout.Token); }
+        catch (OperationCanceledException error) when (error.CancellationToken == cancellation.Token) { canceled = true; }
+        check(canceled, "leaving the plugin library cancels its outstanding HTTP response instead of returning a source error");
     }
 }

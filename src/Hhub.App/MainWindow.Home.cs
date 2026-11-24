@@ -276,7 +276,7 @@ public sealed partial class MainWindow
     private FrameworkElement PrimaryDevice(DeviceRecord device)
     {
         var data = Describe(device);
-        var grid = new Grid { ColumnSpacing = 18, RowSpacing = 14 };
+        var grid = new Grid { ColumnSpacing = 16, RowSpacing = 6 };
         grid.ColumnDefinitions.Add(new() { Width = new(3, GridUnitType.Star) });
         grid.ColumnDefinitions.Add(new() { Width = new(2, GridUnitType.Star) });
         grid.RowDefinitions.Add(new() { Height = GridLength.Auto });
@@ -285,7 +285,21 @@ public sealed partial class MainWindow
         _primaryName = Text(data.Name, 20, true);
         _primaryName.TextWrapping = TextWrapping.Wrap;
         _primaryName.VerticalAlignment = VerticalAlignment.Center;
-        grid.Children.Add(_primaryName);
+        var identity = new Grid { ColumnSpacing = 8, VerticalAlignment = VerticalAlignment.Center };
+        identity.ColumnDefinitions.Add(new() { Width = GridLength.Auto });
+        identity.ColumnDefinitions.Add(new() { Width = GridLength.Auto });
+        identity.ColumnDefinitions.Add(new() { Width = new(1, GridUnitType.Star) });
+        _primaryName.MaxWidth = 200;
+        identity.Children.Add(_primaryName);
+        _primaryConnection = Text(data.Connection, 12);
+        _primaryConnection.Foreground = Muted;
+        Grid.SetColumn(_primaryConnection, 1);
+        identity.Children.Add(_primaryConnection);
+        _primaryBattery = Text(data.Battery is { } battery ? $"{battery:0}%" : "", 13);
+        _primaryBattery.Visibility = data.Battery is null ? Visibility.Collapsed : Visibility.Visible;
+        Grid.SetColumn(_primaryBattery, 2);
+        identity.Children.Add(_primaryBattery);
+        grid.Children.Add(identity);
         var picker = new ComboBox { MaxWidth = 280, MinWidth = 0, HorizontalAlignment = HorizontalAlignment.Stretch,
             PlaceholderText = "选择配置", VerticalAlignment = VerticalAlignment.Center };
         Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(picker, "当前设备配置");
@@ -310,31 +324,16 @@ public sealed partial class MainWindow
             finally { _applyingPrimaryConfiguration = false; UpdatePrimaryOverview(); }
         };
         picker.DropDownClosed += (_, _) => UpdatePrimaryOverview();
-        var controls = new Grid { ColumnSpacing = 10 };
-        controls.ColumnDefinitions.Add(new() { Width = new(1, GridUnitType.Star) });
-        controls.ColumnDefinitions.Add(new() { Width = GridLength.Auto });
-        controls.Children.Add(picker);
-        _primaryBattery = Text(data.Battery is { } battery ? $"{battery:0}%" : "", 14);
-        _primaryBattery.VerticalAlignment = VerticalAlignment.Center;
-        _primaryBattery.Visibility = data.Battery is null ? Visibility.Collapsed : Visibility.Visible;
-        Grid.SetColumn(_primaryBattery, 1);
-        controls.Children.Add(_primaryBattery);
-        Grid.SetColumn(controls, 1);
-        grid.Children.Add(controls);
-        var details = new StackPanel { Spacing = 10, VerticalAlignment = VerticalAlignment.Top };
+        Grid.SetColumn(picker, 1);
+        grid.Children.Add(picker);
+        var details = new StackPanel { Spacing = 4, VerticalAlignment = VerticalAlignment.Top };
         _primaryNumber = Text("设备编号：" + data.Number, 12);
         _primaryNumber.Foreground = Muted;
         _primaryNumber.TextWrapping = TextWrapping.Wrap;
         ToolTipService.SetToolTip(_primaryNumber, device.InstanceId);
-        _primaryConnection = Text(HomeDeviceConnection(device, data), 14);
-        _primaryConnection.Foreground = Muted;
-        _primaryConnection.TextWrapping = TextWrapping.Wrap;
-        details.Children.Add(_primaryConnection);
-        _primaryNumber.Margin = new(0, 8, 0, 0);
         details.Children.Add(_primaryNumber);
-        _primaryOverview = new StackPanel { Spacing = 6, Margin = new(0, 4, 0, 0) };
+        _primaryOverview = new StackPanel { Spacing = 4, Margin = new(0, 5, 0, 0) };
         details.Children.Add(_primaryOverview);
-        details.Children.Add(Button("打开设备设置", () => OpenDevice(device)));
         Grid.SetRow(details, 1);
         grid.Children.Add(details);
         var artwork = DeviceArtwork(device, 220);
@@ -344,7 +343,17 @@ public sealed partial class MainWindow
         Grid.SetRow(artwork, 1); Grid.SetColumn(artwork, 1); grid.Children.Add(artwork);
         UpdatePrimaryOverview();
         QueueOverviewRefresh(device);
-        return Card(grid, padding: new(24));
+        var card = Card(grid, padding: new(24));
+        Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(card, $"打开{data.Name}设置");
+        card.Tapped += (_, args) =>
+        {
+            for (var element = args.OriginalSource as DependencyObject; element is not null && element != card;
+                element = VisualTreeHelper.GetParent(element))
+                if (element is ComboBox or Microsoft.UI.Xaml.Controls.Primitives.ScrollBar) return;
+            args.Handled = true;
+            OpenDevice(device);
+        };
+        return card;
     }
 
 }

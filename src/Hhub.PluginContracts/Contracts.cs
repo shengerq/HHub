@@ -64,6 +64,10 @@ public static class PluginApi
                 throw new InvalidDataException("capability.definition-invalid");
             capability.Value.ValidateDefinition();
         }
+        if (manifest.Navigation is { } navigation
+            && (navigation.Title is { Length: > 32 } || navigation.Glyph is { Length: < 1 or > 4 }
+                || navigation.PathData is { Length: < 1 or > 1024 }))
+            throw new InvalidDataException("plugin.navigation-invalid");
         if (manifest.Provides.Length > 32 || manifest.Requires.Length > 32
             || manifest.Provides.Any(service => service is null || !ValidId(service.Contract) || !Version.TryParse(service.Version, out _)
                 || service.CapabilityIds.Length == 0 || service.CapabilityIds.Distinct().Count() != service.CapabilityIds.Length
@@ -99,6 +103,15 @@ public sealed record PluginDefinition
     public CapabilityDefinition[] Capabilities { get; init; } = [];
     public ServiceOffer[] Provides { get; init; } = [];
     public ServiceRequirement[] Requires { get; init; } = [];
+    public PluginShortcut? Navigation { get; init; }
+}
+
+// Opt-in host shortcut: a plugin declares navigation to appear in the sidebar.
+public sealed record PluginShortcut
+{
+    public string? Title { get; init; }
+    public string? Glyph { get; init; }
+    public string? PathData { get; init; }
 }
 
 public sealed record PluginTarget(string Id, string Name, string Kind, string Connection, bool Online, bool Simulated = false);

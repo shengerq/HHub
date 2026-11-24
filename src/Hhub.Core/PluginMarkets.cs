@@ -37,15 +37,23 @@ public static class PluginMarkets
         return result;
     }
 
-    public static async Task<MarketLoadResult> ReadAsync(IEnumerable<string> addresses)
+    public static Task<MarketLoadResult> ReadAsync(IEnumerable<string> addresses) => ReadAsync(addresses, CancellationToken.None);
+
+    public static async Task<MarketLoadResult> ReadAsync(IEnumerable<string> addresses, CancellationToken cancellationToken,
+        Func<string, CancellationToken, Task<MarketPlugin[]>>? readSource = null)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         string[] sources = Normalize(addresses);
         var results = await Task.WhenAll(sources.Select(async address =>
         {
-            try { return new MarketLoadResult(await PluginMarket.ReadAsync(address).ConfigureAwait(false), []); }
+            try { return new MarketLoadResult(await (readSource ?? PluginMarket.ReadAsync)(address, cancellationToken).ConfigureAwait(false), []); }
             catch (Exception error) when (error is IOException or InvalidDataException or HttpRequestException or OperationCanceledException or JsonException or ArgumentException)
-            { return new MarketLoadResult([], [address + "：" + error.Message]); }
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                return new MarketLoadResult([], [address + "：" + error.Message]);
+            }
         })).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
         // Source order is the tie breaker when two markets advertise the same version.
         var plugins = results.SelectMany(result => result.Plugins).GroupBy(plugin => plugin.Id)
             .Select(group => group.MaxBy(plugin => Version.Parse(plugin.Version))!).OrderBy(plugin => plugin.Name).ToArray();

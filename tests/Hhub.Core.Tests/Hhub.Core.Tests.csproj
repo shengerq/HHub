@@ -1,7 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+  <PropertyGroup>
+    <HhubPluginsRoot Condition="'$(HhubPluginsRoot)' == ''">$(MSBuildThisFileDirectory)../../../HHub-Plugins</HhubPluginsRoot>
+  </PropertyGroup>
   <ItemGroup><ProjectReference Include="../../src/Hhub.Core/Hhub.Core.csproj" /></ItemGroup>
-  <ItemGroup><Compile Include="../../plugins/Hhub.SystemMonitor/SamplingMath.cs" Link="SamplingMath.cs" /></ItemGroup>
-  <ItemGroup><Compile Include="../../plugins/Hhub.SystemMonitor/MonitorDiagnostics.cs" Link="MonitorDiagnostics.cs" /></ItemGroup>
-  <ItemGroup><Compile Include="../../plugins/Hhub.SystemMonitor/DiskSample.cs" Link="DiskSample.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="$(HhubPluginsRoot)/legacy/plugins/Hhub.SystemMonitor/SamplingMath.cs" Link="SamplingMath.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="$(HhubPluginsRoot)/legacy/plugins/Hhub.SystemMonitor/MonitorDiagnostics.cs" Link="MonitorDiagnostics.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="$(HhubPluginsRoot)/legacy/plugins/Hhub.SystemMonitor/DiskSample.cs" Link="DiskSample.cs" /></ItemGroup>
 </Project>

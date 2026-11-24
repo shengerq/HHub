@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Text.Json;
 using Hhub.Core;
 using Microsoft.UI;
@@ -63,6 +63,8 @@ public sealed partial class MainWindow : Window
     private bool _closing;
     private bool _shutdownReady;
     private bool _servicesInitialized;
+    private Grid? _shellContent;
+    private Grid? _titleBarDragRegion;
 
     public void Launch()
     {
@@ -73,8 +75,7 @@ public sealed partial class MainWindow : Window
             {
                 _hiddenToTray = true;
                 AppWindow.Hide(); ApplyTrayEfficiency();
-                _trayPageReleaseTimer.Start();
-                _trayMemoryTimer.Start();
+                ReleaseHiddenPage();
                 _ = RunUiActionAsync(InitializeServicesAsync);
                 return;
             }
@@ -175,11 +176,10 @@ public sealed partial class MainWindow : Window
             QueueActivation();
             await EvaluateScenesAsync();
             UpdateSceneDetailApplications();
-            if (_page == "scenes" && _sceneViewDirty && DateTimeOffset.UtcNow >= _sceneTapDeadline) Render();
+            if (!_hiddenToTray && _page == "scenes" && _sceneViewDirty && DateTimeOffset.UtcNow >= _sceneTapDeadline) Render();
         };
         _sceneTimer.Start();
-        _trayPageReleaseTimer.Tick += ReleaseHiddenPage;
-        _trayMemoryTimer.Tick += TrimTrayMemory;
+        _trayPageReleaseTimer.Tick += (_, _) => ReleaseHiddenPage();
         AppWindow.Closing += async (_, args) =>
         {
             if (_shutdownReady) return;
@@ -209,7 +209,6 @@ public sealed partial class MainWindow : Window
         _hiddenToTray = true;
         _sceneTimer.Stop();
         _trayPageReleaseTimer.Stop();
-        _trayMemoryTimer.Stop();
         _runtimeRefreshTimer.Stop();
         _runtimeRefreshQueued = false;
         StopWatchingDevices();
@@ -318,7 +317,11 @@ public sealed partial class MainWindow : Window
             Content = new Image
             {
                 Width = ShellLayout.BrandIconSize, Height = ShellLayout.BrandIconSize, Stretch = Stretch.Uniform,
-                Source = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(new Uri("ms-appx:///Assets/Hhub.png"))
+                Source = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage
+                {
+                    DecodePixelWidth = 96,
+                    UriSource = new Uri("ms-appx:///Assets/Hhub.png")
+                }
             },
             HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
         };
@@ -343,7 +346,7 @@ public sealed partial class MainWindow : Window
         Grid.SetColumn(dragRegion, 1);
         titleBar.Children.Add(dragRegion);
         _root.Children.Add(titleBar);
-        SetTitleBar(dragRegion);
+        _titleBarDragRegion = dragRegion;
 
         var body = new Grid();
         Grid.SetRow(body, 1);
@@ -373,7 +376,9 @@ public sealed partial class MainWindow : Window
         Grid.SetRow(_content, 2);
         main.Children.Add(_content);
         _navigationView.Content = main;
-        Content = PluginDropZone(_root);
+        _shellContent = PluginDropZone(_root);
+        Content = _shellContent;
+        SetTitleBar(_titleBarDragRegion);
         RefreshNavigation();
     }
 

@@ -16,12 +16,9 @@ internal sealed class NativeTray : IDisposable
     private readonly uint _showMessage;
     private readonly uint _taskbarCreated;
     private NotifyIconData _data;
-    private NativeTrayTooltip? _tooltip;
-    private bool _hovering;
-    private int _hoverX, _hoverY;
-    private string? _tooltipText;
+    private long _lastHover;
+    private bool _versionFour;
     public Func<string>? BatteryText { get; set; }
-    public Func<bool>? IsDark { get; set; }
     public Action? Hovered { get; set; }
     private bool _disposed;
     public bool IsAvailable { get; private set; }
@@ -51,7 +48,7 @@ internal sealed class NativeTray : IDisposable
         _data = new NotifyIconData
         {
             Size = (uint)NativeDataSize, Window = window, Id = 1,
-            Flags = 1 | 2 | 4, Callback = CallbackMessage, Icon = _icon,
+            Flags = 1 | 2 | 4 | 0x80, Callback = CallbackMessage, Icon = _icon,
             Tip = "Hhub " + System.Reflection.CustomAttributeExtensions.GetCustomAttribute<System.Reflection.AssemblyInformationalVersionAttribute>(typeof(NativeTray).Assembly)?.InformationalVersion, Info = "", InfoTitle = ""
         };
         if (!AddIcon())
@@ -64,7 +61,7 @@ internal sealed class NativeTray : IDisposable
     private bool AddIcon()
     {
         IsAvailable = ShellNotifyIcon(0, ref _data);
-        if (IsAvailable) { _data.Version = 4; ShellNotifyIcon(4, ref _data); }
+        if (IsAvailable) { _data.Version = 4; _versionFour = ShellNotifyIcon(4, ref _data); }
         return IsAvailable;
     }
 
@@ -82,48 +79,40 @@ internal sealed class NativeTray : IDisposable
             if (message == _taskbarCreated) AddIcon();
             if (message == CallbackMessage)
             {
-                uint notification = (uint)(lParam.ToInt64() & 0xffff);
+                uint notification = _versionFour ? (uint)(lParam.ToInt64() & 0xffff) : (uint)lParam;
                 if (notification is 0x202 or 0x400 or 0x401)
                 {
-                    _hovering = false; _tooltip?.Hide();
                     _show();
                 }
                 else if (notification == 0x7b) ShowMenu();
-                else if (notification == 0x406) _dispatch(() =>
+                else if (notification is 0x200 or 0x406)
                 {
-                    _hovering = true; GetCursorPos(out var point); _hoverX = point.X; _hoverY = point.Y;
-                    UpdateBatteryTip(force: true); Hovered?.Invoke();
-                });
-                else if (notification == 0x407) _dispatch(() => { _hovering = false; _tooltip?.Hide(); });
+                    long now = Environment.TickCount64;
+                    if (now - _lastHover >= 2000 || _lastHover == 0)
+                    {
+                        _lastHover = now;
+                        _dispatch(() => Hovered?.Invoke());
+                    }
+                }
                 return 0;
             }
         }
         return DefSubclassProc(window, message, wParam, lParam);
     }
 
-    public void UpdateBatteryTip(bool force = false)
+    public void UpdateBatteryTip()
     {
-        if (!_hovering || _disposed) return;
+        if (_disposed || !IsAvailable) return;
         string text = BatteryText?.Invoke() ?? "Hhub";
-        if (!force && text == _tooltipText) return;
-        _tooltipText = text;
-        try
-        {
-            _tooltip ??= new NativeTrayTooltip(_window);
-            _tooltip.Show(text, IsDark?.Invoke() == true, _hoverX, _hoverY);
-        }
-        catch (Win32Exception)
-        {
-            // Keep a working system tooltip if a native popup cannot be created.
-            _data.Tip = text.Length > 127 ? text[..127] : text;
-            if (_data.Tip.Length > 0 && char.IsHighSurrogate(_data.Tip[^1])) _data.Tip = _data.Tip[..^1];
-            _data.Flags |= 0x80; ShellNotifyIcon(1, ref _data);
-        }
+        if (text.Length > 127) text = text[..127];
+        if (text.Length > 0 && char.IsHighSurrogate(text[^1])) text = text[..^1];
+        if (text == _data.Tip) return;
+        _data.Tip = text;
+        ShellNotifyIcon(1, ref _data);
     }
 
     private void ShowMenu()
     {
-        _hovering = false; _tooltip?.Hide();
         nint menu = CreatePopupMenu();
         if (menu == 0) return;
         try
@@ -144,7 +133,6 @@ internal sealed class NativeTray : IDisposable
     {
         if (_disposed) return;
         _disposed = true; IsAvailable = false;
-        _tooltip?.Dispose();
         ShellNotifyIcon(2, ref _data);
         RemoveWindowSubclass(_window, _procedure, 1); DestroyIcon(_icon);
     }

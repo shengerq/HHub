@@ -1,0 +1,10 @@
+PawnIO 2.2.0 — hardware sensor driver
+Copyright (C) namazso
+
+This installer includes the unmodified, publisher-signed PawnIO Setup.
+https://github.com/namazso/PawnIO.Setup/releases/tag/2.2.0
+
+The driver is licensed under GPL-2.0-or-later with the author's exception
+for independent modules using its device interface. The corresponding
+source and full license terms are available from the author.
+https://github.com/namazso/PawnIO/tree/5cdf470831fdfff3f7f1d06363ca6b230f3bf35a

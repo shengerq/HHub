@@ -187,19 +187,23 @@ public sealed record UserPreferences(string Theme = "system", bool SidebarCollap
     public bool AutomaticScenes { get; init; } = true;
     public int ScenePresetVersion { get; init; }
     public bool WatchDevices { get; init; } = true;
+    public int MonitorRefreshSeconds { get; init; } = 1;
     public bool TranslucentBackground { get; init; } = true;
     public int SceneIntervalSeconds { get; init; } = 2;
     public string DefaultPluginMode { get; init; } = "onDemand";
     public string PluginMarketUrl { get; init; } = "";
     public string[]? PluginMarketUrls { get; init; }
+    public bool OfficialPluginMarketAdded { get; init; }
     public string UpdateChannel { get; init; } = "stable";
     public bool AutomaticUpdates { get; init; }
     public string? SelectedDiskId { get; init; }
     public bool StartToTray { get; init; } = true;
+    public int StartupDelaySeconds { get; init; } = 15;
     public bool MinimizeToTray { get; init; } = true;
     public bool CloseToTray { get; init; } = true;
     public bool EfficiencyInTray { get; init; } = true;
     public bool TrayBattery { get; init; } = true;
+    public bool SwitchSceneOnDeviceSelect { get; init; } = true;
 }
 // Glyph remains readable for older scene files; current scene presentation uses names only.
 public sealed record SceneProfile(string Id, string Name, string Glyph = "")
@@ -214,9 +218,13 @@ public sealed class AppStorage
 {
     public string Root { get; }
     public string Plugins { get; }
+    public static string DefaultRoot => Environment.GetEnvironmentVariable("HHUB_PROFILE_ROOT") is { Length: > 0 } profile
+        ? Path.GetFullPath(profile)
+        : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Hhub");
+
     public AppStorage(string? root = null)
     {
-        Root = root ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Hhub");
+        Root = root ?? DefaultRoot;
         Plugins = Path.Combine(Root, "plugins");
         Directory.CreateDirectory(Plugins);
     }

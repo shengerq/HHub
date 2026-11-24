@@ -1,4 +1,4 @@
-﻿using System.Buffers.Binary;
+using System.Buffers.Binary;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -37,6 +37,14 @@ public sealed class ProcessEfficiency : IDisposable
             if (!SetProcessDefaultCpuSets(_process.Handle, null, 0)) throw new Win32Exception(Marshal.GetLastWin32Error());
             _cpuSetsChanged = false;
         }
+    }
+
+    public static void SetWindowsMode(Process process, bool enabled)
+    {
+        var state = new Throttling { Version = 1, ControlMask = enabled ? 1u : 0, StateMask = enabled ? 1u : 0 };
+        if (!SetProcessInformation(process.Handle, 4, ref state, (uint)Marshal.SizeOf<Throttling>()))
+            throw new Win32Exception(Marshal.GetLastWin32Error());
+        process.PriorityClass = enabled ? ProcessPriorityClass.Idle : ProcessPriorityClass.Normal;
     }
 
     public static uint[] SelectEfficientSets(IEnumerable<(uint Id, byte Efficiency, byte Flags)> sets)

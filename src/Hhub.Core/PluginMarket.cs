@@ -7,6 +7,13 @@ namespace Hhub.Core;
 public sealed record MarketPlugin(string Id, string Name, string Version, string PackageUrl, string Sha256, string Description = "")
 {
     public string SourceUrl { get; init; } = "";
+    public string? DownloadUrl { get; init; }
+    public long? AssetId { get; init; }
+    public long? Bytes { get; init; }
+    public string? Author { get; init; }
+    public string? Platform { get; init; }
+    public string? Channel { get; init; }
+    public string? MinimumHostVersion { get; init; }
 }
 
 public static class PluginMarket
@@ -33,11 +40,12 @@ public static class PluginMarket
         var result = new List<MarketPlugin>();
         foreach (var item in entries)
         {
+            string? packageUrl = item?.PackageUrl ?? item?.DownloadUrl;
             if (item is null || !Regex.IsMatch(item.Id ?? "", "^[a-z0-9][a-z0-9.-]*$")
                 || string.IsNullOrWhiteSpace(item.Name) || item.Name.Length > 120 || !Version.TryParse(item.Version, out _)
-                || !Regex.IsMatch(item.Sha256 ?? "", "^[a-fA-F0-9]{64}$") || string.IsNullOrWhiteSpace(item.PackageUrl))
+                || !Regex.IsMatch(item.Sha256 ?? "", "^[a-fA-F0-9]{64}$") || string.IsNullOrWhiteSpace(packageUrl))
                 throw new InvalidDataException("市场插件的身份、版本、下载地址或 SHA-256 无效。");
-            if (!Uri.TryCreate(source, item.PackageUrl, out var resolved)) throw new InvalidDataException("市场插件下载地址无效。");
+            if (!Uri.TryCreate(source, packageUrl, out var resolved)) throw new InvalidDataException("市场插件下载地址无效。");
             var url = Address(resolved.AbsoluteUri);
             result.Add(item with { PackageUrl = url.AbsoluteUri, Description = item.Description ?? "", SourceUrl = source.AbsoluteUri });
         }
@@ -46,9 +54,10 @@ public static class PluginMarket
         return result.GroupBy(item => item.Id).Select(group => group.MaxBy(item => Version.Parse(item.Version))!).ToArray();
     }
 
-    private static async Task Download(Uri uri, Stream destination, int limit)
+    private static async Task Download(Uri uri, Stream destination, int limit, CancellationToken cancellationToken = default)
     {
-        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(45));
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeout.CancelAfter(TimeSpan.FromSeconds(45));
         using var response = await Client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, timeout.Token).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
         if (response.Content.Headers.ContentLength > limit) throw new InvalidDataException("下载内容超过大小限制。");
@@ -63,12 +72,34 @@ public static class PluginMarket
         }
     }
 
-    public static async Task<MarketPlugin[]> ReadAsync(string address)
+    public static Task<MarketPlugin[]> ReadAsync(string address) => ReadAsync(address, CancellationToken.None);
+
+    public static async Task<MarketPlugin[]> ReadAsync(string address, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var uri = Address(address);
         using var data = new MemoryStream();
-        await Download(uri, data, 2 * 1024 * 1024).ConfigureAwait(false);
+        await Download(uri, data, 2 * 1024 * 1024, cancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
         return Parse(System.Text.Encoding.UTF8.GetString(data.GetBuffer(), 0, (int)data.Length), uri);
+    }
+
+    public static async Task DownloadVerifiedArchiveAsync(MarketPlugin entry, string path, CancellationToken token)
+    {
+        bool created = false;
+        try
+        {
+            await using (var output = new FileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.None, 81920, useAsync: true))
+            {
+                created = true;
+                await Download(Address(entry.PackageUrl), output, 256 * 1024 * 1024, token).ConfigureAwait(false);
+            }
+            await using var stream = File.OpenRead(path);
+            string actual = Convert.ToHexString(await System.Security.Cryptography.SHA256.HashDataAsync(stream, token));
+            if (!actual.Equals(entry.Sha256, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidDataException("插件下载校验失败。");
+        }
+        catch { if (created) File.Delete(path); throw; }
     }
 
     public static async Task<LocalPluginPackage> DownloadPackageAsync(MarketPlugin entry, string path)

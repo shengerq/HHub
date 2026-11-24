@@ -1,6 +1,4 @@
-﻿using Hhub.Core;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
+using Hhub.Core;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using WinRT.Interop;
@@ -13,9 +11,7 @@ public sealed partial class MainWindow
     private bool _restoringFromTray;
     private bool _hiddenToTray;
     private bool _hiddenPageDirty;
-    private const long WorkingSetBudget = 384L * 1024 * 1024;
-    private readonly DispatcherTimer _trayPageReleaseTimer = new() { Interval = TimeSpan.FromSeconds(30) };
-    private readonly DispatcherTimer _trayMemoryTimer = new() { Interval = TimeSpan.FromMinutes(1) };
+    private readonly DispatcherTimer _trayPageReleaseTimer = new() { Interval = TimeSpan.FromSeconds(2) };
     private readonly BackgroundEfficiencySession _backgroundEfficiency = new();
     private readonly ProcessEfficiency _processEfficiency = new();
     private readonly TrayBatteryCache _trayBatteries = new();
@@ -30,7 +26,7 @@ public sealed partial class MainWindow
             _tray = new NativeTray(WindowNative.GetWindowHandle(this), Path.Combine(AppContext.BaseDirectory, "Assets", "Hhub.ico"),
                 action => DispatcherQueue.TryEnqueue(() => action()), RestoreFromTray, ExitFromTray)
             {
-                BatteryText = TrayBatteryText, IsDark = () => _dark,
+                BatteryText = TrayBatteryText,
                 Hovered = () => _ = RunUiActionAsync(RefreshTrayBatteriesAsync)
             };
         }
@@ -39,22 +35,24 @@ public sealed partial class MainWindow
 
     private void UpdateTrayBatteries()
     {
-        if (!_preferences.TrayBattery) return;
-        foreach (var plugin in _installed.Plugins)
-            if (PluginMode(plugin.Manifest.Id) != "disabled" && _runtime.IsFresh(plugin.Manifest) && _runtime.Latest(plugin.Manifest.Id) is { } frame)
-                _trayBatteries.Observe(plugin, _devices, frame);
+        if (_preferences.TrayBattery)
+            foreach (var plugin in _installed.Plugins)
+                if (PluginMode(plugin.Manifest.Id) != "disabled" && _runtime.IsFresh(plugin.Manifest) && _runtime.Latest(plugin.Manifest.Id) is { } frame)
+                    _trayBatteries.Observe(plugin, _devices, frame);
         _tray?.UpdateBatteryTip();
     }
 
     private string TrayBatteryText()
     {
         if (!_preferences.TrayBattery) return "Hhub";
-        var enabled = _installed.Plugins.Where(plugin => PluginMode(plugin.Manifest.Id) != "disabled").Select(plugin => plugin.Manifest.Id).ToHashSet();
-        var readings = _trayBatteries.Read(_devices, enabled, device => Describe(device).Name, DateTimeOffset.UtcNow);
-        if (readings.Count == 0) return "Hhub\n未连接外设";
+        var providers = _installed.Plugins.Where(plugin => plugin.Manifest.BatteryTelemetry is not null && PluginMode(plugin.Manifest.Id) != "disabled").ToArray();
+        var enabled = providers.Select(plugin => plugin.Manifest.Id).ToHashSet();
+        var devices = _devices.Where(device => providers.Any(plugin => PluginPolicies.MatchesDevice(plugin.Manifest, device)));
+        var readings = _trayBatteries.Read(devices, enabled, device => Describe(device).Name, DateTimeOffset.UtcNow);
+        if (readings.Count == 0) return "Hhub";
         var duplicateNames = readings.GroupBy(reading => reading.Name).Where(group => group.Count() > 1).Select(group => group.Key).ToHashSet();
         var numbers = new Dictionary<string, int>();
-        return "Hhub · 设备电量\n" + string.Join("\n", readings.Select(reading =>
+        return "Hhub · 设备电量\n" + string.Join("\n", readings.OrderByDescending(reading => reading.Battery.HasValue).Select(reading =>
         {
             string name = reading.Name;
             if (duplicateNames.Contains(name)) { numbers[name] = numbers.GetValueOrDefault(name) + 1; name += " · " + numbers[name]; }
@@ -101,15 +99,13 @@ public sealed partial class MainWindow
             cancel();
             _hiddenPageDirty = true;
         }
-        // Retain the page for quick restores and release its UI after a longer hide.
         AppWindow.Hide();
         _trayPageReleaseTimer.Start();
-        _trayMemoryTimer.Start();
         UpdateTrayBatteries();
         ApplyTrayEfficiency(); QueueActivation();
     }
 
-    private void ReleaseHiddenPage(object? sender, object args)
+    private void ReleaseHiddenPage()
     {
         if (_localPackageInstallBusy) return;
         _trayPageReleaseTimer.Stop();
@@ -117,28 +113,17 @@ public sealed partial class MainWindow
         _captureSceneCreation?.Invoke();
         _captureSceneCreation = null;
         ClearPageViews();
+        SetTitleBar(null);
+        Content = null;
+        SystemBackdrop = null;
+        _appliedBackdrop = null;
         _hiddenPageDirty = true;
     }
-
-    private void TrimTrayMemory(object? sender, object args)
-    {
-        if (!_hiddenToTray || _closing || _localPackageInstallBusy) return;
-        using var process = Process.GetCurrentProcess();
-        if (process.WorkingSet64 <= WorkingSetBudget) return;
-        GC.Collect(GC.MaxGeneration, GCCollectionMode.Optimized, blocking: false);
-        if (!SetProcessWorkingSetSizeEx(process.Handle, nuint.MaxValue, nuint.MaxValue, 0))
-            Trace.WriteLine("Hhub working set trim: " + Marshal.GetLastWin32Error());
-    }
-
-    [DllImport("kernel32.dll", SetLastError = true)]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool SetProcessWorkingSetSizeEx(nint process, nuint minimum, nuint maximum, uint flags);
 
     private void RestoreFromTray()
     {
         if (_closing || _restoringFromTray) return;
         _trayPageReleaseTimer.Stop();
-        _trayMemoryTimer.Stop();
         _restoringFromTray = true;
         try
         {
@@ -146,6 +131,12 @@ public sealed partial class MainWindow
             // can re-enter the minimize-to-tray handler and clear the restored page.
             _hiddenToTray = false;
             ApplyTrayEfficiency();
+            if (Content is null)
+            {
+                Content = _shellContent;
+                SetTitleBar(_titleBarDragRegion);
+                ApplyBackdropPreference();
+            }
             if (_hiddenPageDirty)
             {
                 _hiddenPageDirty = false;

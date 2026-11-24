@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using Hhub.PluginContracts;
@@ -12,7 +13,12 @@ public sealed class PluginSession : IAsyncDisposable
     private readonly InstalledPackage _plugin;
     private readonly SemaphoreSlim _gate = new(1, 1);
     private readonly Task _stderr;
+    private readonly CancellationTokenSource _observation = new();
+    private Task? _watch;
     private readonly IDisposable? _lease;
+    private readonly TimeSpan _operationTimeout;
+    private readonly long _startedAt = Stopwatch.GetTimestamp();
+    private long _lastTrim;
     private bool _closed;
     private bool _disposed;
     public long Revision { get; private set; }
@@ -24,17 +30,19 @@ public sealed class PluginSession : IAsyncDisposable
     private readonly Dictionary<string, long> _revisions = new(StringComparer.Ordinal);
     public IReadOnlyDictionary<string, JsonElement> Values { get; private set; } = new Dictionary<string, JsonElement>();
 
-    private PluginSession(Process process, InstalledPackage plugin, IDisposable? lease)
+    private PluginSession(Process process, InstalledPackage plugin, IDisposable? lease, TimeSpan? operationTimeout)
     {
         _process = process; _plugin = plugin; _lease = lease;
+        _operationTimeout = operationTimeout ?? TimeSpan.FromSeconds(5);
         _stderr = DrainErrorAsync();
     }
 
     public static async Task<PluginSession> StartAsync(PluginStore store, InstalledPackage plugin, string dotnetPath,
-        TimeSpan? timeout = null)
+        TimeSpan? timeout = null, TimeSpan? operationTimeout = null, bool overviewOnly = false, Action<Process>? configureProcess = null, Func<Process, CancellationToken, Task>? observeProcess = null, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var lease = store.AcquireSessionLease(plugin);
-        try { return await StartCoreAsync(store, plugin, dotnetPath, timeout, lease); }
+        try { return await StartCoreAsync(store, plugin, dotnetPath, timeout, lease, operationTimeout, overviewOnly, configureProcess, observeProcess, cancellationToken); }
         catch { lease.Dispose(); throw; }
     }
 
@@ -46,9 +54,10 @@ public sealed class PluginSession : IAsyncDisposable
     }
 
     private static async Task<PluginSession> StartCoreAsync(PluginStore store, InstalledPackage plugin, string dotnetPath,
-        TimeSpan? timeout, IDisposable? lease)
+        TimeSpan? timeout, IDisposable? lease, TimeSpan? operationTimeout = null, bool overviewOnly = false, Action<Process>? configureProcess = null, Func<Process, CancellationToken, Task>? observeProcess = null, CancellationToken cancellationToken = default)
     {
         plugin = store.VerifyInstalled(plugin);
+        cancellationToken.ThrowIfCancellationRequested();
         string entry = Path.Combine(plugin.Directory, plugin.Definition.EntryPoint.Replace('/', Path.DirectorySeparatorChar));
         bool managed = entry.EndsWith(".dll", StringComparison.OrdinalIgnoreCase);
         string data = store.DataDirectory(plugin.Definition.Id); Directory.CreateDirectory(data);
@@ -63,13 +72,22 @@ public sealed class PluginSession : IAsyncDisposable
         foreach (string argument in plugin.Definition.Arguments) info.ArgumentList.Add(argument);
         info.ArgumentList.Add("--hhub-plugin-v1");
         info.Environment["HHUB_PLUGIN_DATA"] = data;
+        if (overviewOnly) info.Environment["HHUB_PLUGIN_OVERVIEW_ONLY"] = "1";
+        else info.Environment.Remove("HHUB_PLUGIN_OVERVIEW_ONLY");
         var process = Process.Start(info) ?? throw new IOException("plugin.start-failed");
-        var session = new PluginSession(process, plugin, lease);
-        try { await session.CallAsync("hello", timeout: timeout); await session.DiscoverAsync(); return session; }
+        var session = new PluginSession(process, plugin, lease, operationTimeout);
+        try
+        {
+            configureProcess?.Invoke(process);
+            if (observeProcess is not null) session._watch = observeProcess(process, session._observation.Token);
+            await session.CallAsync("hello", timeout: timeout, cancellationToken: cancellationToken);
+            await session.DiscoverAsync(cancellationToken);
+            return session;
+        }
         catch { await session.DisposeAsync(); throw; }
     }
 
-    public Task<RpcResponse> DiscoverAsync() => CallAsync("discover");
+    public Task<RpcResponse> DiscoverAsync(CancellationToken token = default) => CallAsync("discover", cancellationToken: token);
     private string SelectTarget(string? targetId)
     {
         string? id = targetId ?? SelectedTargetId;
@@ -78,7 +96,8 @@ public sealed class PluginSession : IAsyncDisposable
         if (!online.Any(target => target.Id == id)) throw new InvalidDataException("target.not-available");
         return id;
     }
-    public Task<RpcResponse> ReadAsync(string? targetId = null) => CallAsync("read", targetId: SelectTarget(targetId));
+    public Task<RpcResponse> ReadAsync(string? targetId = null, CancellationToken token = default) =>
+        CallAsync("read", targetId: SelectTarget(targetId), cancellationToken: token);
     public Task<RpcResponse> SetAsync(string capabilityId, JsonElement value, string? targetId = null)
     {
         var capability = _plugin.Definition.Capabilities.SingleOrDefault(item => item.Id == capabilityId);
@@ -105,20 +124,21 @@ public sealed class PluginSession : IAsyncDisposable
 
     private async Task<RpcResponse> CallAsync(string type, string? capabilityId = null, JsonElement? value = null,
         long? expectedRevision = null, TimeSpan? timeout = null, string? targetId = null,
-        Dictionary<string, JsonElement>? changes = null)
+        Dictionary<string, JsonElement>? changes = null, CancellationToken cancellationToken = default)
     {
-        await _gate.WaitAsync().ConfigureAwait(false);
+        await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
             if (!IsRunning) throw new IOException("plugin.session-ended");
-            using var deadline = new CancellationTokenSource(timeout ?? TimeSpan.FromSeconds(5));
+            using var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            deadline.CancelAfter(timeout ?? _operationTimeout);
             string id = Guid.NewGuid().ToString("N");
             var request = new RpcRequest(type, id, PluginApi.Protocol, _plugin.Definition.Id, capabilityId, value, expectedRevision, targetId, changes);
             string message = JsonSerializer.Serialize(request, PluginApi.Json);
             if (message.Length > PluginApi.MaxMessageCharacters) throw new InvalidDataException("plugin.request-too-large");
             await _process.StandardInput.WriteLineAsync(message.AsMemory(), deadline.Token).ConfigureAwait(false);
             await _process.StandardInput.FlushAsync(deadline.Token).ConfigureAwait(false);
-            string line = await ReadBoundedLineAsync(_process.StandardOutput, deadline.Token).ConfigureAwait(false);
+            string line = await ReadResponseAsync(deadline.Token).ConfigureAwait(false);
             var response = PluginApi.Read<RpcResponse>(line);
             if (response.Type != "result" || response.RequestId != id || response.Protocol != PluginApi.Protocol
                 || response.PluginId != _plugin.Definition.Id || response.TargetId != targetId
@@ -155,6 +175,7 @@ public sealed class PluginSession : IAsyncDisposable
                 Values = values; Revision = response.Revision; SelectedTargetId = targetId; _revisions[targetId!] = response.Revision;
             }
             BackgroundActivity = response.BackgroundActivity;
+            TrimWorkingSet();
             return response;
         }
         catch (PluginRejectedException) { throw; }
@@ -163,6 +184,34 @@ public sealed class PluginSession : IAsyncDisposable
             _closed = true; await KillAndWaitAsync().ConfigureAwait(false); throw;
         }
         finally { _gate.Release(); }
+    }
+
+    private readonly char[] _stdoutBuffer = new char[4096];
+    private int _stdoutOffset, _stdoutLength;
+
+    private async Task<string> ReadResponseAsync(CancellationToken token)
+    {
+        var line = new StringBuilder();
+        while (true)
+        {
+            if (_stdoutOffset == _stdoutLength)
+            {
+                _stdoutLength = await _process.StandardOutput.ReadAsync(_stdoutBuffer.AsMemory(), token).ConfigureAwait(false);
+                _stdoutOffset = 0;
+                if (_stdoutLength == 0) throw new IOException("plugin.output-closed");
+            }
+            int end = Array.IndexOf(_stdoutBuffer, '\n', _stdoutOffset, _stdoutLength - _stdoutOffset);
+            int length = (end >= 0 ? end : _stdoutLength) - _stdoutOffset;
+            if (length > PluginApi.MaxMessageCharacters - line.Length)
+                throw new InvalidDataException("plugin.message-too-large");
+            line.Append(_stdoutBuffer, _stdoutOffset, length);
+            _stdoutOffset += length;
+            if (end >= 0)
+            {
+                _stdoutOffset++;
+                return line.ToString().TrimEnd('\r');
+            }
+        }
     }
 
     public static async Task<string> ReadBoundedLineAsync(StreamReader reader, CancellationToken cancellationToken)
@@ -187,6 +236,19 @@ public sealed class PluginSession : IAsyncDisposable
                 LastDiagnostic = new string(buffer, 0, count);
         }
         catch (Exception error) when (error is IOException or ObjectDisposedException) { }
+    }
+
+    // Long-lived plugins keep their hardware/session caches private. Reclaim the cold pages
+    // after they have been running for a while; short-lived polling sessions skip this.
+    private void TrimWorkingSet()
+    {
+        if (!IsRunning || Stopwatch.GetElapsedTime(_startedAt) < TimeSpan.FromSeconds(8)) return;
+        long now = Stopwatch.GetTimestamp();
+        if (_lastTrim != 0 && Stopwatch.GetElapsedTime(_lastTrim, now) < TimeSpan.FromSeconds(10)) return;
+        _lastTrim = now;
+        try { EmptyWorkingSet(_process.Handle); }
+        catch (Exception error) when (error is InvalidOperationException or System.ComponentModel.Win32Exception)
+        { LastDiagnostic = error.Message; }
     }
 
     private async Task KillAndWaitAsync()
@@ -218,11 +280,23 @@ public sealed class PluginSession : IAsyncDisposable
                 }
                 await KillAndWaitAsync();
             }
+            _observation.Cancel();
+            if (_watch is not null)
+            {
+                // An antivirus provider may still be scanning, independent of the process handle.
+                try { await _watch.WaitAsync(TimeSpan.FromMilliseconds(200)).ConfigureAwait(false); }
+                catch (TimeoutException) { }
+            }
+            _observation.Dispose();
             await _stderr.ConfigureAwait(false);
             _process.Dispose(); _lease?.Dispose(); _disposed = true;
         }
         finally { _gate.Release(); }
     }
+
+    [DllImport("psapi.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool EmptyWorkingSet(nint process);
 }
 
 public sealed class PluginRejectedException(string code) : IOException(code);

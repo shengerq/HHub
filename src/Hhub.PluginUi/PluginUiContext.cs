@@ -3,12 +3,13 @@ using Hhub.Core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 namespace Hhub.PluginUi;
-public sealed class PluginUiContext {
+public sealed record PluginUiContext {
  public required InstalledPlugin Plugin { get; init; }
  public required Func<IReadOnlyDictionary<string, JsonElement>> Snapshot { get; init; }
  public required Func<bool> IsFresh { get; init; }
  public required Func<bool> IsEnabled { get; init; }
  public required Func<string, IReadOnlyDictionary<string, JsonElement>, Task> Send { get; init; }
+ public Func<string, JsonElement, Task>? WriteCapability { get; init; }
  public required Func<Func<Task>, Task> RunAction { get; init; }
  public required Func<double> AvailableWidth { get; init; }
  public required Brush Accent { get; init; }

@@ -243,29 +243,36 @@ public sealed partial class MainWindow
     {
         var available = DeviceConfigurationCommands(device);
         if (available.Length == 0) { ShowError("此设备尚无可配置的适配插件"); return; }
+        foreach (var (plugin, command) in available)
+            if (plugin.Manifest.DeviceOverview is { } overview && command.Id == overview.ApplyCommand &&
+                ReadOverview(plugin, device).Configurations.Length == 0 && overview.RefreshCommand is { } refresh)
+                await SendPluginCommandAsync(plugin, refresh, new Dictionary<string, JsonElement>
+                { ["deviceInstanceId"] = JsonSerializer.SerializeToElement(device.InstanceId) });
         var scenes = new ComboBox { Header = "场景", ItemsSource = _profiles.Select(scene => scene.Name).ToArray(), SelectedIndex = Math.Max(0, _profiles.FindIndex(profile => profile.Id == CurrentScene?.Id)), HorizontalAlignment = HorizontalAlignment.Stretch };
         var commands = new ComboBox { Header = "插件动作", ItemsSource = available.Select(item => $"{item.plugin.Manifest.Name} / {item.command.Name}").ToArray(), SelectedIndex = 0, HorizontalAlignment = HorizontalAlignment.Stretch };
         var values = new ContentControl { HorizontalContentAlignment = HorizontalAlignment.Stretch };
-        CommandForm form = CreateCommandForm(available[0].command);
+        CommandForm? form = null;
         void LoadConfiguration()
         {
             if (commands.SelectedIndex < 0 || scenes.SelectedIndex < 0) return;
             var selected = available[commands.SelectedIndex];
             var saved = _bindings.FirstOrDefault(binding => device.ContainsInstance(binding.DeviceId) && binding.SceneId == _profiles[scenes.SelectedIndex].Id
                 && binding.PluginId == selected.plugin.Manifest.Id && binding.Command == selected.command.Id);
-            form = CreateCommandForm(selected.command, saved?.Values);
+            form = CreateDeviceConfigurationForm(device, selected.plugin, selected.command, saved?.Values);
             values.Content = form.View;
         }
         LoadConfiguration();
         commands.SelectionChanged += (_, _) => LoadConfiguration();
         scenes.SelectionChanged += (_, _) => LoadConfiguration();
         var fields = new StackPanel { Spacing = 18, MinWidth = 360 };
-        fields.Children.Add(scenes); fields.Children.Add(commands); fields.Children.Add(values);
+        fields.Children.Add(scenes);
+        if (available.Length > 1) fields.Children.Add(commands);
+        fields.Children.Add(values);
         Dictionary<string, JsonElement>? parameters = null;
         var dialog = Dialog("添加配置", fields, "保存");
         dialog.PrimaryButtonClick += (_, args) =>
         {
-            try { parameters = form.Read(); }
+            try { parameters = form?.Read() ?? throw new InvalidDataException(); }
             catch (InvalidDataException) { args.Cancel = true; }
         };
         if (await dialog.ShowAsync() != ContentDialogResult.Primary) return;
